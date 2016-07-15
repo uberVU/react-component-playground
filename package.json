@@ -50,6 +50,7 @@
     "test": "karma start --single-run",
     "coveralls": "cat tests/coverage/*/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "build": "webpack -p",
+    "watch": "npm run build -- --watch",
     "prepublish": "npm run build"
   }
 }
