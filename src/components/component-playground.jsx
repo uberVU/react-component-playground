@@ -271,8 +271,9 @@ module.exports = React.createClass({
 
     this._updateContentFrameOrientation();
 
-    if(this.props.component) {
-      this.refs["componentName-" + this.props.component].getDOMNode().scrollIntoView(); 
+    if (this.props.component) {
+      this.refs['componentName-' + this.props.component]
+        .getDOMNode().scrollIntoView({behavior:'smooth'});
     }
   },
 
