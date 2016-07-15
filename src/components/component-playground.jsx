@@ -270,6 +270,10 @@ module.exports = React.createClass({
     window.addEventListener('resize', this.onWindowResize);
 
     this._updateContentFrameOrientation();
+
+    if(this.props.component) {
+      this.refs["componentName-" + this.props.component].getDOMNode().scrollIntoView(); 
+    }
   },
 
   componentWillReceiveProps: function(nextProps) {
