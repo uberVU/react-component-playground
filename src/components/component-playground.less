@@ -39,6 +39,11 @@
 @checkerboard-square-size: 25px;
 @checkerboard-color: #f1f1f1;
 
+@resizer-border-size: 5px;
+@resizer-width-height: 11px;
+@resizer-border-color: rgba(255, 255, 255, 0);
+@resizer-border-hover-color rgba(0, 0, 0, 0.5);
+
 .component-playground {
   position: absolute;
   width: 100%;
@@ -302,29 +307,29 @@
         }
 
         &.horizontal {
-          height: 11px;
-          margin: -5px 0;
-          border-top: 5px solid rgba(255, 255, 255, 0);
-          border-bottom: 5px solid rgba(255, 255, 255, 0);
+          height: @resizer-width-height;
+          margin: -@resizer-border-size 0;
+          border-top: @resizer-border-size solid @resizer-border-color;
+          border-bottom: @resizer-border-size solid @resizer-border-color;
           cursor: row-resize;
           width: 100%;
 
           &:hover {
-            border-top: 5px solid rgba(0, 0, 0, 0.5);
-            border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+            border-top: @resizer-border-size solid @resizer-border-hover-color;
+            border-bottom: @resizer-border-size solid @resizer-border-hover-color;
           }
         }
 
         &.vertical {
-          width: 11px;
-          margin: 0 -5px;
-          border-left: 5px solid rgba(255, 255, 255, 0);
-          border-right: 5px solid rgba(255, 255, 255, 0);
+          width: @resizer-width-height;
+          margin: 0 -@resizer-border-size;
+          border-left: @resizer-border-size solid @resizer-border-color;
+          border-right: @resizer-border-size solid @resizer-border-color;
           cursor: col-resize;
 
           &:hover {
-            border-left: 5px solid rgba(0, 0, 0, 0.5);
-            border-right: 5px solid rgba(0, 0, 0, 0.5);
+            border-left: @resizer-border-size solid @resizer-border-hover-color;
+            border-right: @resizer-border-size solid @resizer-border-hover-color;
           }
         }
 
