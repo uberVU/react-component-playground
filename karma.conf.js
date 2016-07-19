@@ -9,6 +9,7 @@ module.exports = function(config) {
       dir: 'coverage/'
     },
     files: [
+      '../node_modules/babel-polyfill/dist/polyfill.js',
       'bind-polyfill.js',
       'components/**/*.js'
     ],
