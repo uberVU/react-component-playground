@@ -6,7 +6,8 @@ var _ = require('lodash'),
     ComponentTree = require('react-component-tree'),
     stringifyParams = require('react-querystring-router').uri.stringifyParams,
     parseLocation = require('react-querystring-router').uri.parseLocation,
-    isSerializable = require('../lib/is-serializable.js').isSerializable;
+    isSerializable = require('../lib/is-serializable.js').isSerializable,
+    SplitPane = require('./SplitPane.jsx');
 
 module.exports = React.createClass({
   /**
@@ -181,12 +182,30 @@ module.exports = React.createClass({
   },
 
   _renderContentFrame: function() {
-    return <div ref="contentFrame" className={this._getContentFrameClasses()}>
-      <div ref="previewContainer" className={this._getPreviewClasses()}>
-        {this.loadChild('preview')}
+
+    // No need for a SplitPane if editor is not open
+    if (!this.props.editor) {
+      return (
+      <div ref="contentFrame" className={this._getContentFrameClasses()}>
+          <div ref="previewContainer" className={this._getPreviewClasses()}>
+            {this.loadChild('preview')}
+          </div>
       </div>
-      {this.props.editor ? this._renderFixtureEditor() : null}
-    </div>
+      );
+    }
+
+    return (
+      <div ref="contentFrame" className={this._getContentFrameClasses()}>
+        <SplitPane  split='vertical'
+                    defaultSize={localStorage.getItem('splitPos')}
+                    onChange={size => localStorage.setItem('splitPos', size)}>
+          {this._renderFixtureEditor()}
+          <div ref="previewContainer" className={this._getPreviewClasses()}>
+            {this.loadChild('preview')}
+          </div>
+        </SplitPane>
+      </div>
+    );
   },
 
   _renderFixtureEditor: function() {
