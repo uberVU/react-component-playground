@@ -182,6 +182,8 @@ module.exports = React.createClass({
   },
 
   _renderContentFrame: function() {
+    var split = this.state.orientation == 'landscape' ?
+      'vertical' : 'horizontal';
 
     // No need for a SplitPane if editor is not open
     if (!this.props.editor) {
@@ -196,7 +198,8 @@ module.exports = React.createClass({
 
     return (
       <div ref="contentFrame" className={this._getContentFrameClasses()}>
-        <SplitPane  split='vertical'
+        <SplitPane  split={split}
+                    ref='editorPreviewSplitPane'
                     defaultSize={localStorage.getItem('splitPos')}
                     onChange={size => localStorage.setItem('splitPos', size)}>
           {this._renderFixtureEditor()}
