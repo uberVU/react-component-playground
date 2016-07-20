@@ -20,8 +20,6 @@ export default React.createClass({
     classes[style['pane']] = true;
     classes = classNames(classes);
 
-    var split = this.props.split || 'vertical';
-
     var styles = {
       flex: 1,
       position: 'relative',
@@ -39,9 +37,9 @@ export default React.createClass({
     }
 
     return (
-    <div className={classes} style={styles}>
-      {this.props.children}
-    </div>
+      <div className={classes} style={styles}>
+        {this.props.children}
+      </div>
     );
   }
 });

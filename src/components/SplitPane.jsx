@@ -69,19 +69,7 @@ export default React.createClass({
           var size = this.props.split === 'vertical' ? width : height;
           var position = this.state.position;
 
-          var newSize = size - (position - current);
-          this.setState({
-            position: current,
-            resized: true
-          });
 
-          if (newSize >= this.props.minSize) {
-            if (this.props.onChange) {
-              this.props.onChange(newSize);
-            }
-            ref.setState({
-              size: newSize
-            });
           }
         }
       }
