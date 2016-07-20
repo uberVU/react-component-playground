@@ -35,7 +35,7 @@ export default React.createClass({
     document.addEventListener('mousemove', this.onMouseMove);
     var ref = this.refs.pane1;
     if (ref && this.props.defaultSize && !this.state.resized) {
-      ref.setState({
+      this.setState({
         size: this.props.defaultSize
       });
     }
@@ -132,18 +132,18 @@ export default React.createClass({
     classes = classNames(classes);
 
     return (
-        <div className={classes} style={styles}>
-            <Pane ref='pane1' key='pane1' split={split}>
-                {children[0]}
-            </Pane>
-            <Resizer ref='resizer'
-                     key='resizer'
-                     split={split}
-                     onMouseDown={this.onMouseDown} />
-            <Pane ref='pane2' key='pane2' split={split}>
-                {children[1]}
-            </Pane>
-        </div>
+      <div className={classes} style={styles}>
+        <Pane ref='pane1' key='pane1' size={this.state.size} split={split}>
+            {children[0]}
+        </Pane>
+        <Resizer ref='resizer'
+                 key='resizer'
+                 split={split}
+                 onMouseDown={this.onMouseDown} />
+        <Pane ref='pane2' key='pane2' split={split}>
+            {children[1]}
+        </Pane>
+      </div>
     );
   }
 });

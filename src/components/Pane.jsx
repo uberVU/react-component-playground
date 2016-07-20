@@ -28,12 +28,12 @@ export default React.createClass({
       outline: 'none',
       overflow: 'none'
     };
-    if (this.state.size) {
-      if (split === 'horizontal') {
-        styles.height = this.state.size;
+    if (this.props.size) {
+      if (this.props.split === 'horizontal') {
+        styles.height = this.props.size;
         styles.display = 'flex';
       } else {
-        styles.width = this.state.size;
+        styles.width = this.props.size;
       }
       styles.flex = 'none';
     }
