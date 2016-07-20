@@ -17,20 +17,20 @@ export default React.createClass({
     onChange: React.PropTypes.func
   },
 
-  getInitialState: function getInitialState() {
+  getInitialState: function() {
     return {
       active: false,
       resized: false
     };
   },
 
-  getDefaultProps: function getDefaultProps() {
+  getDefaultProps: function() {
     return {
       minSize: 0
     };
   },
 
-  componentDidMount: function componentDidMount() {
+  componentDidMount: function() {
     document.addEventListener('mouseup', this.onMouseUp);
     document.addEventListener('mousemove', this.onMouseMove);
     var ref = this.refs.pane1;
@@ -41,12 +41,12 @@ export default React.createClass({
     }
   },
 
-  componentWillUnmount: function componentWillUnmount() {
+  componentWillUnmount: function() {
     document.removeEventListener('mouseup', this.onMouseUp);
     document.removeEventListener('mousemove', this.onMouseMove);
   },
 
-  onMouseDown: function onMouseDown(event) {
+  onMouseDown: function() {
     var position = this.props.split === 'vertical' ?
      event.clientX : event.clientY;
     this.setState({
@@ -55,7 +55,7 @@ export default React.createClass({
     });
   },
 
-  onMouseMove: function onMouseMove(event) {
+  onMouseMove: function() {
     if (this.state.active) {
       var ref = this.refs.pane1;
       if (ref) {
@@ -88,13 +88,13 @@ export default React.createClass({
     }
   },
 
-  onMouseUp: function onMouseUp() {
+  onMouseUp: function() {
     this.setState({
       active: false
     });
   },
 
-  render: function render() {
+  render: function() {
     var split = this.props.split || 'vertical';
     var styles = {
       display: 'flex',
