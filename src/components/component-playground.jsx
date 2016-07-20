@@ -181,6 +181,14 @@ module.exports = React.createClass({
     </ul>;
   },
 
+  _renderPreview: function() {
+    return (
+    <div ref="previewContainer" className={this._getPreviewClasses()}>
+      {this.loadChild('preview')}
+    </div>
+    );
+  },
+
   _renderContentFrame: function() {
     var split = this.state.orientation == 'landscape' ?
       'vertical' : 'horizontal';
@@ -188,11 +196,9 @@ module.exports = React.createClass({
     // No need for a SplitPane if editor is not open
     if (!this.props.editor) {
       return (
-      <div ref="contentFrame" className={this._getContentFrameClasses()}>
-          <div ref="previewContainer" className={this._getPreviewClasses()}>
-            {this.loadChild('preview')}
-          </div>
-      </div>
+        <div ref="contentFrame" className={this._getContentFrameClasses()}>
+          {this._renderPreview()}
+        </div>
       );
     }
 
@@ -203,9 +209,7 @@ module.exports = React.createClass({
                     defaultSize={localStorage.getItem('splitPos')}
                     onChange={size => localStorage.setItem('splitPos', size)}>
           {this._renderFixtureEditor()}
-          <div ref="previewContainer" className={this._getPreviewClasses()}>
-            {this.loadChild('preview')}
-          </div>
+          {this._renderPreview()}
         </SplitPane>
       </div>
     );
