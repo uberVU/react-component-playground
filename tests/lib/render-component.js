@@ -2,13 +2,13 @@ var $ = require('jquery'),
     ComponentTree = require('react-component-tree'),
     ComponentPlayground = require('components/component-playground.jsx');
 
-module.exports = function(fixture) {
+module.exports = function(fixture, componentArg) {
   var container = document.createElement('div'),
       component,
       $component;
 
   component = ComponentTree.render({
-    component: ComponentPlayground,
+    component: componentArg || ComponentPlayground,
     snapshot: fixture,
     container: container
   });
