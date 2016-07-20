@@ -60,17 +60,26 @@ export default React.createClass({
       var ref = this.refs.pane1;
       if (ref) {
         var node = ref.getDOMNode();
-        if (window.getComputedStyle) {
-          var styles = window.getComputedStyle(node);
-          var width = styles.width.replace('px', '');
-          var height = styles.height.replace('px', '');
-          var current = this.props.split === 'vertical' ?
-           event.clientX : event.clientY;
-          var size = this.props.split === 'vertical' ? width : height;
-          var position = this.state.position;
+        var width = node.offsetWidth;
+        var height = node.offsetHeight;
+        var current = this.props.split === 'vertical' ? event.clientX
+                                                      : event.clientY;
+        var size = this.props.split === 'vertical' ? width : height;
+        var position = this.state.position;
 
+        var newSize = size - (position - current);
+        this.setState({
+          position: current,
+          resized: true
+        });
 
+        if (newSize >= this.props.minSize) {
+          if (this.props.onChange) {
+            this.props.onChange(newSize);
           }
+          this.setState({
+            size: newSize
+          });
         }
       }
     }
