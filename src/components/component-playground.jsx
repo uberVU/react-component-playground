@@ -183,9 +183,9 @@ module.exports = React.createClass({
 
   _renderPreview: function() {
     return (
-    <div ref="previewContainer" className={this._getPreviewClasses()}>
-      {this.loadChild('preview')}
-    </div>
+      <div ref="previewContainer" className={this._getPreviewClasses()}>
+        {this.loadChild('preview')}
+      </div>
     );
   },
 

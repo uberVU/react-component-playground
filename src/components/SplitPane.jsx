@@ -47,8 +47,8 @@ export default React.createClass({
   },
 
   onMouseDown: function() {
-    var position = this.props.split === 'vertical' ?
-     event.clientX : event.clientY;
+    var position = this.props.split === 'vertical' ? event.clientX
+                                                   : event.clientY;
     this.setState({
       active: true,
       position: position
@@ -64,7 +64,8 @@ export default React.createClass({
         var height = node.offsetHeight;
         var current = this.props.split === 'vertical' ? event.clientX
                                                       : event.clientY;
-        var size = this.props.split === 'vertical' ? width : height;
+        var size = this.props.split === 'vertical' ? node.offsetWidth
+                                                   : node.offsetHeight;
         var position = this.state.position;
 
         var newSize = size - (position - current);
