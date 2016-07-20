@@ -207,7 +207,8 @@ module.exports = React.createClass({
         <SplitPane  split={split}
                     ref='editorPreviewSplitPane'
                     defaultSize={localStorage.getItem('splitPos')}
-                    onChange={size => localStorage.setItem('splitPos', size)}>
+                    onChange={size => localStorage.setItem('splitPos', size)}
+                    minSize={1}>
           {this._renderFixtureEditor()}
           {this._renderPreview()}
         </SplitPane>
