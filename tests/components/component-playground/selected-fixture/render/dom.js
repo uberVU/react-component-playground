@@ -48,4 +48,8 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   it('should render fixture editor button', function() {
     expect(component.refs.editorButton).to.exist;
   });
+
+  it('should not render SplitPane', function() {
+    expect(component.refs.editorPreviewSplitPane).to.not.exist;
+  });
 });

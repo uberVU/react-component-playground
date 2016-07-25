@@ -19,6 +19,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     expect(component.refs.editor).to.exist;
   });
 
+  it('should render SplitPane', function() {
+    expect(component.refs.editorPreviewSplitPane).to.exist;
+  });
+
   it('should add editor class on content frame node', function() {
     expect($(component.refs.contentFrame.getDOMNode())
            .hasClass(style['with-editor'])).to.be.true;
@@ -45,4 +49,5 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     expect($(component.refs.editor.getDOMNode())
            .hasClass(style['invalid-syntax'])).to.be.true;
   });
+
 });
