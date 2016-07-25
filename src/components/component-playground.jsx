@@ -190,19 +190,10 @@ module.exports = React.createClass({
   },
 
   _renderContentFrame: function() {
-    var split = this.state.orientation == 'landscape' ?
-      'vertical' : 'horizontal';
-    var classes = {
-      [style[split]] : true,
-      [style['split-pane']] : true
-    };
-    var resizerClasses = {
-      [style[split]] : true,
-      [style['resizer']] : true
-    }
-
-    classes = classNames(classes);
-    resizerClasses = classNames(resizerClasses);
+    var split = this.state.orientation == 'landscape' ? 'vertical'
+                                                      : 'horizontal';
+    var classes = classNames(style[split], style['split-pane']);
+    var resizerClasses = classNames(style[split], style['resizer']);
 
     // No need for a SplitPane if editor is not open
     if (!this.props.editor) {
@@ -215,14 +206,14 @@ module.exports = React.createClass({
 
     return (
       <div ref="contentFrame" className={this._getContentFrameClasses()}>
-        <SplitPane  split={split}
-                    ref='editorPreviewSplitPane'
-                    defaultSize={localStorage.getItem('splitPos')}
-                    onChange={size => localStorage.setItem('splitPos', size)}
-                    minSize={20}
-                    className={classes}
-                    paneClassName=''
-                    resizerClassName={resizerClasses} >
+        <SplitPane split={split}
+                   ref='editorPreviewSplitPane'
+                   defaultSize={localStorage.getItem('splitPos')}
+                   onChange={size => localStorage.setItem('splitPos', size)}
+                   minSize={20}
+                   className={classes}
+                   paneClassName=''
+                   resizerClassName={resizerClasses} >
           {this._renderFixtureEditor()}
           {this._renderPreview()}
         </SplitPane>
