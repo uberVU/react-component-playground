@@ -127,20 +127,18 @@ module.exports = React.createClass({
     classes[style['full-screen']] = this.props.fullScreen;
     classes = classNames(classes);
 
-    return (
-      <div className={classes}>
-        <div className={style['left-nav']}>
-          <div className={style.header}>
-            {this._renderHomeButton()}
-            {isFixtureSelected ? this._renderMenu() : null}
-          </div>
-          <div className={style['fixtures']}>
-            {this._renderFixtures()}
-          </div>
+    return <div className={classes}>
+      <div className={style['left-nav']}>
+        <div className={style.header}>
+          {this._renderHomeButton()}
+          {isFixtureSelected ? this._renderMenu() : null}
         </div>
-        {isFixtureSelected ? this._renderContentFrame() : null}
+        <div className={style['fixtures']}>
+          {this._renderFixtures()}
+        </div>
       </div>
-    );
+      {isFixtureSelected ? this._renderContentFrame() : null}
+    </div>
   },
 
   _renderFixtures: function() {
@@ -182,11 +180,9 @@ module.exports = React.createClass({
   },
 
   _renderPreview: function() {
-    return (
-      <div ref="previewContainer" className={this._getPreviewClasses()}>
-        {this.loadChild('preview')}
-      </div>
-    );
+    return <div ref="previewContainer" className={this._getPreviewClasses()}>
+      {this.loadChild('preview')}
+    </div>
   },
 
   _renderContentFrame: function() {
