@@ -190,35 +190,32 @@ module.exports = React.createClass({
   },
 
   _renderContentFrame: function() {
-    var split = this.state.orientation == 'landscape' ? 'vertical'
-                                                      : 'horizontal';
-    var classes = classNames(style[split], style['split-pane']);
-    var resizerClasses = classNames(style[split], style['resizer']);
+    return <div ref="contentFrame" className={this._getContentFrameClasses()}>
+      {this.props.editor ? this._renderSplitPane() : this._renderPreview()}
+    </div>
+  },
 
-    // No need for a SplitPane if editor is not open
-    if (!this.props.editor) {
-      return (
-        <div ref="contentFrame" className={this._getContentFrameClasses()}>
-          {this._renderPreview()}
-        </div>
-      );
-    }
+  _renderSplitPane: function() {
+    return <SplitPane
+      split={this._getOrientationDirection()}
+      ref='editorPreviewSplitPane'
+      defaultSize={localStorage.getItem('splitPos')}
+      onChange={size => localStorage.setItem('splitPos', size)}
+      minSize={20}
+      className={this._getSplitPaneClasses('split-pane')}
+      resizerClassName={this._getSplitPaneClasses('resizer')}
+    >
+      {this._renderFixtureEditor()}
+      {this._renderPreview()}
+    </SplitPane>
+  },
 
-    return (
-      <div ref="contentFrame" className={this._getContentFrameClasses()}>
-        <SplitPane split={split}
-                   ref='editorPreviewSplitPane'
-                   defaultSize={localStorage.getItem('splitPos')}
-                   onChange={size => localStorage.setItem('splitPos', size)}
-                   minSize={20}
-                   className={classes}
-                   paneClassName=''
-                   resizerClassName={resizerClasses} >
-          {this._renderFixtureEditor()}
-          {this._renderPreview()}
-        </SplitPane>
-      </div>
-    );
+  _getOrientationDirection: function() {
+    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
+  },
+
+  _getSplitPaneClasses: function(type) {
+    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _renderFixtureEditor: function() {
