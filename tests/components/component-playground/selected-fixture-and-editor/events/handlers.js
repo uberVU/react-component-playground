@@ -60,4 +60,33 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
             .to.equal(JSON.stringify(fixture.state.fixtureContents, null, 2));
     });
   });
+
+  describe('Splitpane orientation', function() {
+    function simulateWindowResize(width, height) {
+      sinon.stub(component.refs.contentFrame, 'getDOMNode').returns({
+        offsetWidth: width,
+        offsetHeight: height
+      });
+
+      component.onWindowResize();
+    }
+
+    afterEach(function() {
+      component.refs.contentFrame.getDOMNode.restore();
+    });
+
+    it('should be set to horizontal on portrait orientation', function() {
+      simulateWindowResize(200, 300);
+
+      expect(component.refs.editorPreviewSplitPane.props.split)
+            .to.equal('horizontal');
+    });
+
+    it('should be set to vertical on landscape orientation', function() {
+      simulateWindowResize(300, 200);
+
+      expect(component.refs.editorPreviewSplitPane.props.split)
+            .to.equal('vertical');
+    });
+  });
 });

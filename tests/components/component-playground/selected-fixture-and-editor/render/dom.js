@@ -45,4 +45,8 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     expect($(component.refs.editor.getDOMNode())
            .hasClass(style['invalid-syntax'])).to.be.true;
   });
+
+  it('should not render a splitpane', function() {
+    expect(component.refs.editorPreviewSplitPane).to.exist;
+  })
 });
