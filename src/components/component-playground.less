@@ -39,10 +39,10 @@
 @checkerboard-square-size: 25px;
 @checkerboard-color: #f1f1f1;
 
+@resizer-size: 1px;
+@resizer-color: fade(#aaa, 80%);
 @resizer-border-size: 5px;
-@resizer-width-height: 11px;
-@resizer-border-color: rgba(255, 255, 255, 0);
-@resizer-border-hover-color: rgba(0, 0, 0, 0.5);
+@resizer-border-hover-color: fade(#000, 15%);
 
 .component-playground {
   position: absolute;
@@ -288,41 +288,27 @@
       }
 
       .resizer {
-        background: #000;
-        opacity: .2;
+        background: @resizer-color;
         z-index: 1;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        -moz-background-clip: padding;
-        -webkit-background-clip: padding;
         background-clip: padding-box;
+        border: solid transparent;
 
         &.horizontal {
-          height: @resizer-width-height;
+          height: @resizer-size;
+          border-width: @resizer-border-size 0;
           margin: -@resizer-border-size 0;
-          border-top: @resizer-border-size solid @resizer-border-color;
-          border-bottom: @resizer-border-size solid @resizer-border-color;
           cursor: row-resize;
-          width: 100%;
-
-          &:hover {
-            border-top: @resizer-border-size solid @resizer-border-hover-color;
-            border-bottom: @resizer-border-size solid @resizer-border-hover-color;
-          }
         }
 
         &.vertical {
-          width: @resizer-width-height;
+          width: @resizer-size;
+          border-width: 0 @resizer-border-size;
           margin: 0 -@resizer-border-size;
-          border-left: @resizer-border-size solid @resizer-border-color;
-          border-right: @resizer-border-size solid @resizer-border-color;
           cursor: col-resize;
+        }
 
-          &:hover {
-            border-left: @resizer-border-size solid @resizer-border-hover-color;
-            border-right: @resizer-border-size solid @resizer-border-hover-color;
-          }
+        &:hover {
+          border-color: @resizer-border-hover-color;
         }
 
         &.disabled {
