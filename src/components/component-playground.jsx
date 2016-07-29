@@ -7,6 +7,7 @@ var _ = require('lodash'),
     stringifyParams = require('react-querystring-router').uri.stringifyParams,
     parseLocation = require('react-querystring-router').uri.parseLocation,
     isSerializable = require('../lib/is-serializable.js').isSerializable,
+    localStorageLib = require('../lib/local-storage.js'),
     SplitPane = require('ubervu-react-split-pane');
 
 module.exports = React.createClass({
@@ -116,6 +117,23 @@ module.exports = React.createClass({
       _.assign(params, this.state.fixtureUnserializableProps);
 
       return _.merge(params, _.omit(this.state.fixtureContents, 'state'));
+    },
+
+    splitPane: function() {
+      return {
+        component: SplitPane,
+        key: 'editorPreviewSplitPane',
+        split: this._getOrientationDirection(),
+        defaultSize: localStorageLib.get('splitPos'),
+        onChange: (function(size) {localStorageLib.set('splitPos', size)}),
+        minSize: 20,
+        className: this._getSplitPaneClasses('split-pane'),
+        resizerClassName: this._getSplitPaneClasses('resizer'),
+        children: [
+          this._renderFixtureEditor(),
+          this._renderPreview()
+        ]
+      };
     }
   },
 
@@ -183,11 +201,12 @@ module.exports = React.createClass({
     return <div ref="previewContainer" className={this._getPreviewClasses()}>
       {this.loadChild('preview')}
     </div>
+                key="previewContainer"
   },
 
   _renderContentFrame: function() {
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
-      {this.props.editor ? this._renderSplitPane() : this._renderPreview()}
+      {this.props.editor ? this.loadChild('splitPane') : this._renderPreview()}
     </div>
   },
 
@@ -221,7 +240,8 @@ module.exports = React.createClass({
       !this.state.isFixtureUserInputValid;
     editorClasses = classNames(editorClasses);
 
-    return <div className={style['fixture-editor-outer']}>
+    return <div key="fixture-editor-outer" 
+                className={style['fixture-editor-outer']}>
       <textarea ref="editor"
                 className={editorClasses}
                 value={this.state.fixtureUserInput}
