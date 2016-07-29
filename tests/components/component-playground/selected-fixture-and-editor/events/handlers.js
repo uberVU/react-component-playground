@@ -2,6 +2,7 @@ var FIXTURE = 'selected-fixture-and-editor';
 
 describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
   var ComponentTree = require('react-component-tree'),
+      localStorageLib = require('srclib/local-storage.js'),
       render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
@@ -59,34 +60,15 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
       expect(stateSet.fixtureUserInput)
             .to.equal(JSON.stringify(fixture.state.fixtureContents, null, 2));
     });
-  });
 
-  describe('Splitpane orientation', function() {
-    function simulateWindowResize(width, height) {
-      sinon.stub(component.refs.contentFrame, 'getDOMNode').returns({
-        offsetWidth: width,
-        offsetHeight: height
-      });
-
-      component.onWindowResize();
-    }
-
-    afterEach(function() {
-      component.refs.contentFrame.getDOMNode.restore();
+    it('should set', function() {
+      expect(component.refs.splitPane.props.onChange())
+        .to.equal(localStorageLib.set('splitPos'));
     });
 
-    it('should be set to horizontal on portrait orientation', function() {
-      simulateWindowResize(200, 300);
-
-      expect(component.refs.editorPreviewSplitPane.props.split)
-            .to.equal('horizontal');
-    });
-
-    it('should be set to vertical on landscape orientation', function() {
-      simulateWindowResize(300, 200);
-
-      expect(component.refs.editorPreviewSplitPane.props.split)
-            .to.equal('vertical');
+    it('should get', function() {
+      expect(component.refs.splitPane.props.defaultSize)
+        .to.equal(localStorageLib.get('splitPos'));
     });
   });
 });

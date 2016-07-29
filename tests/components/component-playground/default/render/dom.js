@@ -69,6 +69,6 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   });
 
   it('should not render a splitpane', function() {
-    expect(component.refs.editorPreviewSplitPane).to.not.exist;
+    expect(component.refs.splitPane).to.not.exist;
   });
 });

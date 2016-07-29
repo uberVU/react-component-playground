@@ -125,7 +125,7 @@ module.exports = React.createClass({
         key: 'editorPreviewSplitPane',
         split: this._getOrientationDirection(),
         defaultSize: localStorageLib.get('splitPos'),
-        onChange: (function(size) {localStorageLib.set('splitPos', size)}),
+        onChange: (size => {localStorageLib.set('splitPos', size)}),
         minSize: 20,
         className: this._getSplitPaneClasses('split-pane'),
         resizerClassName: this._getSplitPaneClasses('resizer'),
@@ -240,7 +240,7 @@ module.exports = React.createClass({
       !this.state.isFixtureUserInputValid;
     editorClasses = classNames(editorClasses);
 
-    return <div key="fixture-editor-outer" 
+    return <div key="fixture-editor-outer"
                 className={style['fixture-editor-outer']}>
       <textarea ref="editor"
                 className={editorClasses}
