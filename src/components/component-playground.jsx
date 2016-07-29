@@ -198,10 +198,11 @@ module.exports = React.createClass({
   },
 
   _renderPreview: function() {
-    return <div ref="previewContainer" className={this._getPreviewClasses()}>
+    return <div ref="previewContainer"
+                key="previewContainer"
+                className={this._getPreviewClasses()}>
       {this.loadChild('preview')}
     </div>
-                key="previewContainer"
   },
 
   _renderContentFrame: function() {
