@@ -61,12 +61,12 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
             .to.equal(JSON.stringify(fixture.state.fixtureContents, null, 2));
     });
 
-    it('should set', function() {
+    it('should set splitpane onChange to localstorage lib set', function() {
       expect(component.refs.splitPane.props.onChange())
         .to.equal(localStorageLib.set('splitPos'));
     });
 
-    it('should get', function() {
+    it('should set splitpane defaultSize to localstorage lib get', function() {
       expect(component.refs.splitPane.props.defaultSize)
         .to.equal(localStorageLib.get('splitPos'));
     });
