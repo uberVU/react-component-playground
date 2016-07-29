@@ -211,21 +211,6 @@ module.exports = React.createClass({
     </div>
   },
 
-  _renderSplitPane: function() {
-    return <SplitPane
-      split={this._getOrientationDirection()}
-      ref='editorPreviewSplitPane'
-      defaultSize={localStorage.getItem('splitPos')}
-      onChange={size => localStorage.setItem('splitPos', size)}
-      minSize={20}
-      className={this._getSplitPaneClasses('split-pane')}
-      resizerClassName={this._getSplitPaneClasses('resizer')}
-    >
-      {this._renderFixtureEditor()}
-      {this._renderPreview()}
-    </SplitPane>
-  },
-
   _getOrientationDirection: function() {
     return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
   },
