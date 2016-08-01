@@ -67,4 +67,8 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     expect($(component.refs.homeButton.getDOMNode())
            .hasClass(style['selected-button'])).to.be.true;
   });
+
+  it('should not render a splitpane', function() {
+    expect(component.refs.splitPane).to.not.exist;
+  });
 });

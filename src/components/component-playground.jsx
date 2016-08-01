@@ -6,7 +6,9 @@ var _ = require('lodash'),
     ComponentTree = require('react-component-tree'),
     stringifyParams = require('react-querystring-router').uri.stringifyParams,
     parseLocation = require('react-querystring-router').uri.parseLocation,
-    isSerializable = require('../lib/is-serializable.js').isSerializable;
+    isSerializable = require('../lib/is-serializable.js').isSerializable,
+    localStorageLib = require('../lib/local-storage.js'),
+    SplitPane = require('ubervu-react-split-pane');
 
 module.exports = React.createClass({
   /**
@@ -115,6 +117,23 @@ module.exports = React.createClass({
       _.assign(params, this.state.fixtureUnserializableProps);
 
       return _.merge(params, _.omit(this.state.fixtureContents, 'state'));
+    },
+
+    splitPane: function() {
+      return {
+        component: SplitPane,
+        key: 'editorPreviewSplitPane',
+        split: this._getOrientationDirection(),
+        defaultSize: localStorageLib.get('splitPos'),
+        onChange: (size => {localStorageLib.set('splitPos', size)}),
+        minSize: 20,
+        className: this._getSplitPaneClasses('split-pane'),
+        resizerClassName: this._getSplitPaneClasses('resizer'),
+        children: [
+          this._renderFixtureEditor(),
+          this._renderPreview()
+        ]
+      };
     }
   },
 
@@ -126,20 +145,18 @@ module.exports = React.createClass({
     classes[style['full-screen']] = this.props.fullScreen;
     classes = classNames(classes);
 
-    return (
-      <div className={classes}>
-        <div className={style['left-nav']}>
-          <div className={style.header}>
-            {this._renderHomeButton()}
-            {isFixtureSelected ? this._renderMenu() : null}
-          </div>
-          <div className={style['fixtures']}>
-            {this._renderFixtures()}
-          </div>
+    return <div className={classes}>
+      <div className={style['left-nav']}>
+        <div className={style.header}>
+          {this._renderHomeButton()}
+          {isFixtureSelected ? this._renderMenu() : null}
         </div>
-        {isFixtureSelected ? this._renderContentFrame() : null}
+        <div className={style['fixtures']}>
+          {this._renderFixtures()}
+        </div>
       </div>
-    );
+      {isFixtureSelected ? this._renderContentFrame() : null}
+    </div>
   },
 
   _renderFixtures: function() {
@@ -180,13 +197,26 @@ module.exports = React.createClass({
     </ul>;
   },
 
+  _renderPreview: function() {
+    return <div ref="previewContainer"
+                key="previewContainer"
+                className={this._getPreviewClasses()}>
+      {this.loadChild('preview')}
+    </div>
+  },
+
   _renderContentFrame: function() {
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
-      <div ref="previewContainer" className={this._getPreviewClasses()}>
-        {this.loadChild('preview')}
-      </div>
-      {this.props.editor ? this._renderFixtureEditor() : null}
+      {this.props.editor ? this.loadChild('splitPane') : this._renderPreview()}
     </div>
+  },
+
+  _getOrientationDirection: function() {
+    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
+  },
+
+  _getSplitPaneClasses: function(type) {
+    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _renderFixtureEditor: function() {
@@ -196,7 +226,8 @@ module.exports = React.createClass({
       !this.state.isFixtureUserInputValid;
     editorClasses = classNames(editorClasses);
 
-    return <div className={style['fixture-editor-outer']}>
+    return <div key="fixture-editor-outer"
+                className={style['fixture-editor-outer']}>
       <textarea ref="editor"
                 className={editorClasses}
                 value={this.state.fixtureUserInput}

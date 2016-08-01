@@ -20,6 +20,7 @@ module.exports = function(config) {
     webpack: {
       resolve: {
         alias: {
+          srclib: path.join(__dirname, 'src/lib'),
           components: path.join(__dirname, 'src/components'),
           fixtures: path.join(__dirname, 'fixtures'),
           tests: path.join(__dirname, 'tests')

@@ -45,4 +45,23 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     expect($(component.refs.editor.getDOMNode())
            .hasClass(style['invalid-syntax'])).to.be.true;
   });
+
+  it('should render a splitpane ', function() {
+    expect(component.refs.splitPane).to.exist;
+  });
+
+  it('should add splitpane class on splitPane', function() {
+    expect($(component.refs.splitPane.getDOMNode())
+           .hasClass(style['split-pane'])).to.be.true;
+  });
+
+  it('should have proper split orientation on SplitPane', function() {
+    var splitByOrientation = {
+      portrait: 'horizontal',
+      landscape: 'vertical'
+    }
+
+    expect(component.refs.splitPane.props.split)
+      .to.equal(splitByOrientation[component.state.orientation]);
+  });
 });
