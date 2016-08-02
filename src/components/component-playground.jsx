@@ -179,16 +179,7 @@ module.exports = React.createClass({
     );
   },
 
-  onChange: function(e) {
-    this.setState({
-      searchText: e.target.value
-    });
-  },
-
   _renderFixtures: function() {
-    console.log(this._getFilteredFixtures())
-    console.log(this.props.components)
-    console.log(_.isEqual(this.props.components, this._getFilteredFixtures()))
     return <ul className={style.components}>
       {_.map(this._getFilteredFixtures(), function(component, componentName) {
         return <li className={style.component} key={componentName}>
@@ -199,36 +190,6 @@ module.exports = React.createClass({
 
       }.bind(this))}
     </ul>
-  },
-
-  _getFilteredFixtures() {
-    var searchText = this.state.searchText;
-
-    return _.reduce(this.props.components, function(acc, component, componentName) {
-        var fixtureNames = Object.keys(component.fixtures);
-        var filteredFixtures = _.filter(fixtureNames, function(fixtureName) {
-          return fixtureName.indexOf(this.state.searchText) !== -1 ||
-            this._isCurrentFixtureSelected(componentName, fixtureName);
-        }.bind(this));
-
-        // There's no need to show components that doesn't have any results
-        if (filteredFixtures.length === 0) {
-          return acc;
-        }
-
-        var fixtures = _.reduce(filteredFixtures, function(acc, fixtureName) {
-          acc[fixtureName] = component.fixtures[fixtureName];
-
-          return acc;
-        }, {});
-
-        acc[componentName] = {
-          fixtures: fixtures,
-          class: component.class
-        }
-
-        return acc;
-      }.bind(this), {});
   },
 
   _renderComponentFixtures: function(componentName, fixtures) {
@@ -477,6 +438,12 @@ module.exports = React.createClass({
 
   onSplitPaneChange: function(size) {
     localStorageLib.set('splitPos', size);
+  onChange: function(e) {
+    this.setState({
+      searchText: e.target.value
+    });
+  },
+
   _isFixtureSelected: function() {
     return this.constructor.isFixtureSelected(this.props);
   },
@@ -575,5 +542,35 @@ module.exports = React.createClass({
       orientation: contentNode.offsetHeight > contentNode.offsetWidth ?
                    'portrait' : 'landscape'
     });
+  },
+
+  _getFilteredFixtures() {
+    var components = this.props.components;
+
+    return _.reduce(components, function(acc, component, componentName) {
+      var fixtureNames = Object.keys(component.fixtures);
+      var filteredFixtures = _.filter(fixtureNames, function(fixtureName) {
+        return fixtureName.indexOf(this.state.searchText) !== -1 ||
+               this._isCurrentFixtureSelected(componentName, fixtureName);
+      }.bind(this));
+
+      // There's no need to show components that doesn't have any results
+      if (filteredFixtures.length === 0) {
+        return acc;
+      }
+
+      var fixtures = _.reduce(filteredFixtures, function(acc, fixtureName) {
+        acc[fixtureName] = component.fixtures[fixtureName];
+
+        return acc;
+      }, {});
+
+      acc[componentName] = {
+        fixtures: fixtures,
+        class: component.class
+      }
+
+      return acc;
+    }.bind(this), {});
   }
 });
