@@ -208,7 +208,7 @@ module.exports = React.createClass({
   _renderPreview: function() {
     store.dispatch(changeFixture(this.state.fixtureContents.reduxStore));
 
-    return <Provider ref="provider" store={store}>
+    return <Provider key="provider" ref="provider" store={store}>
       {
         () => <div ref={(ref) => this.refs.previewContainer = ref}
                    key="previewContainer"

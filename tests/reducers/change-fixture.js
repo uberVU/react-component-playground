@@ -17,8 +17,6 @@ describe('Change fixture reducer', function() {
       data: expectedState
     };
 
-    console.log(action);
-
     expect(reducer({}, action)).to.deep.equal(expectedState);
   });
 

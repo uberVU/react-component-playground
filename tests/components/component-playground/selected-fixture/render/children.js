@@ -21,7 +21,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
   });
 
   it('should load preview component', function() {
-    expect(loadChild.loadChild).to.have.been.called;
+    expect(loadChild.loadChild).to.have.been.calledWith(component, 'preview');
   });
 
   it('should send component class to preview child', function() {
