@@ -8,7 +8,11 @@ var _ = require('lodash'),
     parseLocation = require('react-querystring-router').uri.parseLocation,
     isSerializable = require('../lib/is-serializable.js').isSerializable,
     localStorageLib = require('../lib/local-storage.js'),
-    SplitPane = require('ubervu-react-split-pane');
+    Provider = require('react-redux').Provider,
+    redux = require('redux'),
+    SplitPane = require('ubervu-react-split-pane'),
+    changeFixture = require('../actions/change-fixture.js').changeFixture,
+    store = require('../store/create-store.js')();
 
 module.exports = React.createClass({
   /**
@@ -109,6 +113,7 @@ module.exports = React.createClass({
     preview: function() {
       var params = {
         component: this.constructor.getSelectedComponentClass(this.props),
+        ref: ((ref) => this.refs.preview = ref),
         // Child should re-render whenever fixture changes
         key: this._getPreviewComponentKey()
       };
@@ -125,7 +130,7 @@ module.exports = React.createClass({
         key: 'editorPreviewSplitPane',
         split: this._getOrientationDirection(),
         defaultSize: localStorageLib.get('splitPos'),
-        onChange: (size => {localStorageLib.set('splitPos', size)}),
+        onChange: this.onSplitPaneChange,
         minSize: 20,
         className: this._getSplitPaneClasses('split-pane'),
         resizerClassName: this._getSplitPaneClasses('resizer'),
@@ -139,7 +144,6 @@ module.exports = React.createClass({
 
   render: function() {
     var isFixtureSelected = this.constructor.isFixtureSelected(this.props);
-
     var classes = {};
     classes[style['component-playground']] = true;
     classes[style['full-screen']] = this.props.fullScreen;
@@ -173,6 +177,10 @@ module.exports = React.createClass({
     </ul>
   },
 
+  onSplitPaneChange: function(size) {
+    localStorageLib.set('splitPos', size);
+  },
+
   _renderComponentFixtures: function(componentName, fixtures) {
     return <ul className={style['component-fixtures']}>
       {_.map(fixtures, function(props, fixtureName) {
@@ -198,11 +206,17 @@ module.exports = React.createClass({
   },
 
   _renderPreview: function() {
-    return <div ref="previewContainer"
-                key="previewContainer"
-                className={this._getPreviewClasses()}>
-      {this.loadChild('preview')}
-    </div>
+    store.dispatch(changeFixture(this.state.fixtureContents.reduxStore));
+
+    return <Provider ref="provider" store={store}>
+      {
+        () => <div ref={(ref) => this.refs.previewContainer = ref}
+                   key="previewContainer"
+                   className={this._getPreviewClasses()}>
+                {this.loadChild('preview')}
+              </div>
+      }
+      </Provider>
   },
 
   _renderContentFrame: function() {
