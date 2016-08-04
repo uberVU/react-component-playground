@@ -111,9 +111,10 @@ module.exports = React.createClass({
 
   children: {
     preview: function() {
+      var self = this;
       var params = {
         component: this.constructor.getSelectedComponentClass(this.props),
-        ref: ((ref) => this.refs.preview = ref),
+        ref: this._saveRef('preview'),
         // Child should re-render whenever fixture changes
         key: this._getPreviewComponentKey()
       };
@@ -203,14 +204,15 @@ module.exports = React.createClass({
 
   _renderPreview: function() {
     store.dispatch(changeFixture(this.state.fixtureContents.reduxStore));
-
     return <Provider key="provider" ref="provider" store={store}>
       {
-        () => <div ref={(ref) => this.refs.previewContainer = ref}
-                   key="previewContainer"
-                   className={this._getPreviewClasses()}>
-                {this.loadChild('preview')}
-              </div>
+        function() {
+          return <div ref={this._saveRef('previewContainer')}
+                      key="previewContainer"
+                      className={this._getPreviewClasses()}>
+                  {this.loadChild('preview')}
+                 </div>
+        }.bind(this)
       }
       </Provider>
   },
@@ -426,6 +428,12 @@ module.exports = React.createClass({
 
   onSplitPaneChange: function(size) {
     localStorageLib.set('splitPos', size);
+  },
+
+  _saveRef: function(name) {
+    return function(ref) {
+      this.refs[name] = ref;
+    }.bind(this);
   },
 
   _getOrientationDirection: function() {
