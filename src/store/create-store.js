@@ -3,9 +3,5 @@ var redux = require('redux'),
     reducer = require('../reducers/root-reducer.js');
 
 module.exports = function(initialState) {
-  return redux.createStore(
-    reducer,
-    {},
-    redux.applyMiddleware(thunk)
-  );
+  return redux.createStore(reducer, {}, redux.applyMiddleware(thunk));
 }

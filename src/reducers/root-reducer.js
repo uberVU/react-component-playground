@@ -1,4 +1,4 @@
-var changeFixture = require('./change-fixture.js');
+var changeFixture = require('./change-fixture.js'),
+    redux = require('redux');
 
-// only exports one reducer now, please use combineReducers when more are added
-module.exports = changeFixture;
+module.exports = redux.combineReducers({changeFixture : changeFixture});

@@ -177,10 +177,6 @@ module.exports = React.createClass({
     </ul>
   },
 
-  onSplitPaneChange: function(size) {
-    localStorageLib.set('splitPos', size);
-  },
-
   _renderComponentFixtures: function(componentName, fixtures) {
     return <ul className={style['component-fixtures']}>
       {_.map(fixtures, function(props, fixtureName) {
@@ -223,14 +219,6 @@ module.exports = React.createClass({
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
       {this.props.editor ? this.loadChild('splitPane') : this._renderPreview()}
     </div>
-  },
-
-  _getOrientationDirection: function() {
-    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
-  },
-
-  _getSplitPaneClasses: function(type) {
-    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _renderFixtureEditor: function() {
@@ -434,6 +422,18 @@ module.exports = React.createClass({
 
   onWindowResize: function(e) {
     this._updateContentFrameOrientation();
+  },
+
+  onSplitPaneChange: function(size) {
+    localStorageLib.set('splitPos', size);
+  },
+
+  _getOrientationDirection: function() {
+    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
+  },
+
+  _getSplitPaneClasses: function(type) {
+    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _getPreviewComponentKey: function() {
