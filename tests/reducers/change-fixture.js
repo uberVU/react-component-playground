@@ -29,6 +29,17 @@ describe('Change fixture reducer', function() {
     var action = {
       type: CHANGE_FIXTURE
     };
+
     expect(reducer(initialState, action)).to.be.empty;
+  });
+
+  it('should maintain state when receiving an unknown action', function() {
+    var initialState = {
+      id: 1,
+      name: 'John'
+    };
+
+    expect(reducer(initialState, {type: 'unknown'}))
+      .to.deep.equal(initialState);
   });
 });
