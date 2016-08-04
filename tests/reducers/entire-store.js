@@ -14,16 +14,23 @@ describe('Change fixture reducer', function() {
 
     var action = {
       type: CHANGE_FIXTURE,
-      data: expectedState
+      fixture: {
+        reduxStore: {
+          id: 1,
+          name: 'John'
+        }
+      }
     };
 
     expect(reducer({}, action)).to.deep.equal(expectedState);
   });
 
-  it('should return empty state on undefined data', function() {
+  it('should return empty state on undefined fixture', function() {
     var initialState = {
-      id: 1,
-      name: 'John'
+      reduxStore: {
+        id: 1,
+        name: 'John'
+      }
     };
 
     var action = {
@@ -35,8 +42,10 @@ describe('Change fixture reducer', function() {
 
   it('should maintain state when receiving an unknown action', function() {
     var initialState = {
-      id: 1,
-      name: 'John'
+      reduxStore: {
+        id: 1,
+        name: 'John'
+      }
     };
 
     expect(reducer(initialState, {type: 'unknown'}))

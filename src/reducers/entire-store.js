@@ -7,7 +7,10 @@ module.exports = function(state, action) {
 
   switch (action.type) {
     case CHANGE_FIXTURE:
-      return action.data || {};
+      if (action.fixture && action.fixture.reduxStore) {
+        return action.fixture.reduxStore;
+      }
+      return {};
     default:
       return state;
   }

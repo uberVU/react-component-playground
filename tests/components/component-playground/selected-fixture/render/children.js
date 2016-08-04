@@ -20,8 +20,8 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
     childParams = component.children.preview.call(component);
   });
 
-  it('should load preview component', function() {
-    expect(loadChild.loadChild).to.have.been.calledWith(component, 'preview');
+  it('should load provider component', function() {
+    expect(loadChild.loadChild).to.have.been.calledWith(component, 'provider');
   });
 
   it('should send component class to preview child', function() {

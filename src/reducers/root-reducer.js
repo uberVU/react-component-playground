@@ -1,4 +1,4 @@
-var changeFixture = require('./change-fixture.js'),
+var entireStore = require('./entire-store.js'),
     redux = require('redux');
 
-module.exports = redux.combineReducers({changeFixture : changeFixture});
+module.exports = redux.combineReducers({entireStore : entireStore});
