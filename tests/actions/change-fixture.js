@@ -2,12 +2,12 @@ describe('Change fixture actions', function() {
   var changeFixture = require('src/actions/change-fixture.js');
 
   it('should create the correct action', function() {
-    var data = {id: 1, name: 'John'};
+    var fixture = {reduxStore: {id: 1, name: 'John'}};
     var expectedAction = {
       type: changeFixture.type,
-      data: data
+      fixture: fixture
     };
 
-    expect(changeFixture.changeFixture(data)).to.deep.equal(expectedAction);
+    expect(changeFixture.changeFixture(fixture)).to.deep.equal(expectedAction);
   });
 });

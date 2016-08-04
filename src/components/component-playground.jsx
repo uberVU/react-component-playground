@@ -299,6 +299,7 @@ module.exports = React.createClass({
     this._fixtureUpdateInterval = setInterval(this.onFixtureUpdate, 100);
 
     if (this.refs.preview) {
+      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
 
@@ -331,6 +332,7 @@ module.exports = React.createClass({
     if (this.refs.preview && (
         this.constructor.didFixtureChange(prevProps, this.props) ||
         prevState.fixtureChange !== this.state.fixtureChange)) {
+      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
   },
@@ -431,6 +433,7 @@ module.exports = React.createClass({
   },
 
   _saveRef: function(name) {
+    // In a Provider context, we can only use callbacks to save component refs.
     return function(ref) {
       this.refs[name] = ref;
     }.bind(this);
