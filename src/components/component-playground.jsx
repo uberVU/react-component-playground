@@ -137,9 +137,18 @@ module.exports = React.createClass({
         resizerClassName: this._getSplitPaneClasses('resizer'),
         children: [
           this._renderFixtureEditor(),
-          this._renderPreview()
+          this.loadChild('provider')
         ]
       };
+    },
+
+    provider: function() {
+      return {
+        component: Provider,
+        key: 'provider',
+        store: store,
+        children: this._renderPreview()
+      }
     }
   },
 
@@ -203,23 +212,19 @@ module.exports = React.createClass({
   },
 
   _renderPreview: function() {
-    store.dispatch(changeFixture(this.state.fixtureContents.reduxStore));
-    return <Provider key="provider" ref="provider" store={store}>
-      {
-        function() {
-          return <div ref={this._saveRef('previewContainer')}
-                      key="previewContainer"
-                      className={this._getPreviewClasses()}>
-                  {this.loadChild('preview')}
-                 </div>
-        }.bind(this)
-      }
-      </Provider>
+    return function() {
+      return <div ref={this._saveRef('previewContainer')}
+                  key="previewContainer"
+                  className={this._getPreviewClasses()}>
+              {this.loadChild('preview')}
+             </div>
+    }.bind(this)
   },
 
   _renderContentFrame: function() {
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
-      {this.props.editor ? this.loadChild('splitPane') : this._renderPreview()}
+      {this.props.editor ? this.loadChild('splitPane')
+                         : this.loadChild('provider')}
     </div>
   },
 
