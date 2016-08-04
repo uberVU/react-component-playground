@@ -1,5 +1,5 @@
 var FIXTURE = 'full-screen';
-var style = require('components/component-playground.less');
+var style = require('src/components/component-playground.less');
 
 describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   var render = require('tests/lib/render-component.js'),

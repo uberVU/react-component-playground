@@ -1,6 +1,6 @@
 var $ = require('jquery'),
     ComponentTree = require('react-component-tree'),
-    ComponentPlayground = require('components/component-playground.jsx');
+    ComponentPlayground = require('src/components/component-playground.jsx');
 
 module.exports = function(fixture) {
   var container = document.createElement('div'),

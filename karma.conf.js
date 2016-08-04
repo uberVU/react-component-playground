@@ -23,7 +23,6 @@ module.exports = function(config) {
       resolve: {
         alias: {
           src: path.join(__dirname, 'src'),
-          components: path.join(__dirname, 'src/components'),
           fixtures: path.join(__dirname, 'fixtures'),
           tests: path.join(__dirname, 'tests')
         }
