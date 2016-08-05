@@ -8,7 +8,11 @@ var _ = require('lodash'),
     parseLocation = require('react-querystring-router').uri.parseLocation,
     isSerializable = require('../lib/is-serializable.js').isSerializable,
     localStorageLib = require('../lib/local-storage.js'),
-    SplitPane = require('ubervu-react-split-pane');
+    Provider = require('react-redux').Provider,
+    redux = require('redux'),
+    SplitPane = require('ubervu-react-split-pane'),
+    changeFixture = require('../actions/change-fixture.js').changeFixture,
+    store = require('../store/create-store.js')();
 
 module.exports = React.createClass({
   /**
@@ -109,6 +113,7 @@ module.exports = React.createClass({
     preview: function() {
       var params = {
         component: this.constructor.getSelectedComponentClass(this.props),
+        ref: this._saveRef('preview'),
         // Child should re-render whenever fixture changes
         key: this._getPreviewComponentKey()
       };
@@ -125,21 +130,29 @@ module.exports = React.createClass({
         key: 'editorPreviewSplitPane',
         split: this._getOrientationDirection(),
         defaultSize: localStorageLib.get('splitPos'),
-        onChange: (size => {localStorageLib.set('splitPos', size)}),
+        onChange: this.onSplitPaneChange,
         minSize: 20,
         className: this._getSplitPaneClasses('split-pane'),
         resizerClassName: this._getSplitPaneClasses('resizer'),
         children: [
           this._renderFixtureEditor(),
-          this._renderPreview()
+          this.loadChild('provider')
         ]
       };
+    },
+
+    provider: function() {
+      return {
+        component: Provider,
+        key: 'provider',
+        store: store,
+        children: this._renderPreview()
+      }
     }
   },
 
   render: function() {
     var isFixtureSelected = this.constructor.isFixtureSelected(this.props);
-
     var classes = {};
     classes[style['component-playground']] = true;
     classes[style['full-screen']] = this.props.fullScreen;
@@ -198,25 +211,20 @@ module.exports = React.createClass({
   },
 
   _renderPreview: function() {
-    return <div ref="previewContainer"
-                key="previewContainer"
-                className={this._getPreviewClasses()}>
-      {this.loadChild('preview')}
-    </div>
+    return function() {
+      return <div ref={this._saveRef('previewContainer')}
+        key="previewContainer"
+        className={this._getPreviewClasses()}>
+          {this.loadChild('preview')}
+      </div>
+    }.bind(this)
   },
 
   _renderContentFrame: function() {
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
-      {this.props.editor ? this.loadChild('splitPane') : this._renderPreview()}
+      {this.props.editor ? this.loadChild('splitPane')
+                         : this.loadChild('provider')}
     </div>
-  },
-
-  _getOrientationDirection: function() {
-    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
-  },
-
-  _getSplitPaneClasses: function(type) {
-    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _renderFixtureEditor: function() {
@@ -295,6 +303,7 @@ module.exports = React.createClass({
     this._fixtureUpdateInterval = setInterval(this.onFixtureUpdate, 100);
 
     if (this.refs.preview) {
+      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
 
@@ -327,6 +336,7 @@ module.exports = React.createClass({
     if (this.refs.preview && (
         this.constructor.didFixtureChange(prevProps, this.props) ||
         prevState.fixtureChange !== this.state.fixtureChange)) {
+      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
   },
@@ -420,6 +430,25 @@ module.exports = React.createClass({
 
   onWindowResize: function(e) {
     this._updateContentFrameOrientation();
+  },
+
+  onSplitPaneChange: function(size) {
+    localStorageLib.set('splitPos', size);
+  },
+
+  _saveRef: function(name) {
+    // In a Provider context, we can only use callbacks to save component refs.
+    return function(ref) {
+      this.refs[name] = ref;
+    }.bind(this);
+  },
+
+  _getOrientationDirection: function() {
+    return this.state.orientation === 'landscape' ? 'vertical' : 'horizontal';
+  },
+
+  _getSplitPaneClasses: function(type) {
+    return classNames(style[this._getOrientationDirection()], style[type]);
   },
 
   _getPreviewComponentKey: function() {

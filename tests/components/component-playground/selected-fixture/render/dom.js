@@ -1,5 +1,5 @@
 var FIXTURE = 'selected-fixture';
-var style = require('components/component-playground.less');
+var style = require('src/components/component-playground.less');
 
 describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   var $ = require('jquery'),

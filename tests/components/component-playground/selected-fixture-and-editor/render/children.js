@@ -17,7 +17,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
     ({container, component, $component} = render(fixture));
   });
 
-  it('should load preview and splitpane', function() {
-    expect(loadChild.loadChild).to.have.been.called.twice;
+  it('should load splitpane', function() {
+    expect(loadChild.loadChild).to.have.been.calledWith(component, 'splitPane');
   });
 });

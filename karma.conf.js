@@ -10,7 +10,9 @@ module.exports = function(config) {
     },
     files: [
       'bind-polyfill.js',
-      'components/**/*.js'
+      'components/**/*.js',
+      'actions/*.js',
+      'reducers/*.js'
     ],
     frameworks: ['mocha', 'chai', 'sinon-chai'],
     preprocessors: {
@@ -20,8 +22,7 @@ module.exports = function(config) {
     webpack: {
       resolve: {
         alias: {
-          srclib: path.join(__dirname, 'src/lib'),
-          components: path.join(__dirname, 'src/components'),
+          src: path.join(__dirname, 'src'),
           fixtures: path.join(__dirname, 'fixtures'),
           tests: path.join(__dirname, 'tests')
         }
