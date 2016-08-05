@@ -111,7 +111,6 @@ module.exports = React.createClass({
 
   children: {
     preview: function() {
-      var self = this;
       var params = {
         component: this.constructor.getSelectedComponentClass(this.props),
         ref: this._saveRef('preview'),
@@ -214,10 +213,10 @@ module.exports = React.createClass({
   _renderPreview: function() {
     return function() {
       return <div ref={this._saveRef('previewContainer')}
-                  key="previewContainer"
-                  className={this._getPreviewClasses()}>
-              {this.loadChild('preview')}
-             </div>
+        key="previewContainer"
+        className={this._getPreviewClasses()}>
+          {this.loadChild('preview')}
+      </div>
     }.bind(this)
   },
 
@@ -445,7 +444,7 @@ module.exports = React.createClass({
   },
 
   _getOrientationDirection: function() {
-    return this.state.orientation == 'landscape' ? 'vertical' : 'horizontal';
+    return this.state.orientation === 'landscape' ? 'vertical' : 'horizontal';
   },
 
   _getSplitPaneClasses: function(type) {
