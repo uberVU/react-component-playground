@@ -1,17 +1,14 @@
 var FIXTURE = 'selected-fixture';
 
 describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
-  var ComponentTree = require('react-component-tree'),
-      render = require('tests/lib/render-component.js'),
+  var render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
 
     sinon.spy(component, 'setState');
   });

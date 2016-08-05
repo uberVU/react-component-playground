@@ -7,21 +7,19 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
-  define('on fixture update', function() {
+  describe('on fixture update', function() {
     var stateSet;
 
     beforeEach(function() {
       sinon.stub(ComponentTree, 'serialize').returns(_.merge({},
-        fixture.state.fixtureContents,
-        fixture.state.fixtureUnserializableProps));
+          fixture.state.fixtureContents,
+          fixture.state.fixtureUnserializableProps));
       sinon.spy(component, 'setState');
 
       component.onFixtureUpdate();

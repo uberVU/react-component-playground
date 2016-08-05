@@ -6,8 +6,6 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   // The following tests are about the initial state generation, so we don't
@@ -17,7 +15,7 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
   beforeEach(function() {
     sinon.stub(ComponentTree, 'injectState');
 
-    ({container, component, $component} = render(statelessFixture));
+    ({component} = render(statelessFixture));
   });
 
   afterEach(function() {

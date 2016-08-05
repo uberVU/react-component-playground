@@ -6,7 +6,6 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
       container,
       fixture;
 
@@ -18,7 +17,7 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
     sinon.stub(window, 'addEventListener');
     sinon.stub(window, 'removeEventListener');
 
-    ({container, component, $component} = render(fixture));
+    ({container, component} = render(fixture));
   });
 
   afterEach(function() {

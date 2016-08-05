@@ -8,13 +8,11 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions State`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture,
       stateInjected;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should inject preview state when fixture changes', function() {

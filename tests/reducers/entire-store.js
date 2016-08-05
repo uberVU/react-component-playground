@@ -1,4 +1,4 @@
-var reducer = require('src/reducers/change-fixture.js');
+var reducer = require('src/reducers/entire-store.js');
 var CHANGE_FIXTURE = require('src/actions/change-fixture.js').type;
 
 describe('Change fixture reducer', function() {

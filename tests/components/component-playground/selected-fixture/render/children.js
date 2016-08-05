@@ -7,15 +7,13 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture,
       childParams;
 
   stubLoadChild();
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
 
     childParams = component.children.preview.call(component);
   });
