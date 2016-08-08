@@ -423,7 +423,6 @@ module.exports = React.createClass({
       });
     } catch (e) {
       newState.isFixtureUserInputValid = false;
-      console.error(e);
     }
 
     this.setState(newState);

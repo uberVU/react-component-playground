@@ -91,21 +91,11 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
 
     describe('Invalid editor input', function() {
       beforeEach(function() {
-        sinon.stub(console, 'error');
-
         triggerEditorChange('lorem ipsum');
-      });
-
-      afterEach(function() {
-        console.error.restore();
       });
 
       it('should not update fixture contents', function() {
         expect(stateSet.fixtureContents).to.be.undefined;
-      });
-
-      it('should call console.error', function() {
-        expect(console.error.lastCall.args[0]).to.be.an.instanceof(Error);
       });
 
       it('should mark invalid change in state', function() {
