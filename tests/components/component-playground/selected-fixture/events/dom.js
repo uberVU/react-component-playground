@@ -7,10 +7,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
       render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
-  var component,
-      $component,
-      container,
-      fixture;
+  var component;
 
   var stubbedFixture = _.assign({}, fixture, {
     router: {
@@ -20,7 +17,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
   });
 
   beforeEach(function() {
-    ({container, component, $component} = render(stubbedFixture));
+    ({component} = render(stubbedFixture));
   });
 
   afterEach(function() {
@@ -75,7 +72,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
 
     it('should reset state', function() {
       var fixtureContents = _.omit(
-          fixture.components.FirstComponent.fixtures['default'],
+          fixture.components.FirstComponent.fixtures.default,
           _.keys(component.state.fixtureUnserializableProps));
 
       expect(stateSet.fixtureContents).to.deep.equal(fixtureContents);

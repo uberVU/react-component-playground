@@ -7,12 +7,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
-      fixture;
+      $component;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component, $component} = render(fixture));
   });
 
   it('should render component names', function() {
@@ -77,7 +75,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   });
 
   it('should set the correct class name to search input', function() {
-    expect($(component.refs.filterInput)
+    expect($(component.refs.filterInput.getDOMNode())
            .hasClass(style['filter-input'])).to.be.true;
   });
 

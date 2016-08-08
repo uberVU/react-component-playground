@@ -6,15 +6,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
       stubLoadChild = require('tests/setup/stub-load-child.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
-  var component,
-      $component,
-      container,
-      fixture;
-
   stubLoadChild();
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    render(fixture);
   });
 
   it('should not load preview component', function() {

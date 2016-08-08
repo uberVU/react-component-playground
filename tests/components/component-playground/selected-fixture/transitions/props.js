@@ -6,14 +6,12 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Props`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture,
       stateSet,
       stateInjected;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
 
     sinon.stub(ComponentTree, 'injectState');
     sinon.spy(component, 'setState');

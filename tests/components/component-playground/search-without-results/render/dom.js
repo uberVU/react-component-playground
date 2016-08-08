@@ -1,18 +1,15 @@
 var FIXTURE = 'search-without-results';
-var style = require('components/component-playground.less');
+var style = require('src/components/component-playground.less');
 
 describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   var $ = require('jquery'),
       render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
-  var component,
-      $component,
-      container,
-      fixture;
+  var component;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should not render components', function() {

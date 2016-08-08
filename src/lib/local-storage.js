@@ -1,3 +1,5 @@
+/* global localStorage */
+
 module.exports = {
   get: function(option) {
     var stringifiedValue;
@@ -19,7 +21,7 @@ module.exports = {
     try {
       return localStorage.setItem(option, JSON.stringify(value));
     } catch (e) {
-      return null
+      return null;
     }
   }
 };
