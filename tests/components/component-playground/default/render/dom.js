@@ -8,11 +8,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
 
   var component,
       $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component, $component} = render(fixture));
   });
 
   it('should render component names', function() {

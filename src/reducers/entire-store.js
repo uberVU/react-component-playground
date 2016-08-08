@@ -14,4 +14,4 @@ module.exports = function(state, action) {
     default:
       return state;
   }
-}
+};

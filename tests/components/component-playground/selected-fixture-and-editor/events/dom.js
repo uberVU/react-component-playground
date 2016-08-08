@@ -7,12 +7,10 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should focus on editor on fixture click', function() {
@@ -69,7 +67,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
       triggerEditorChange('{"nested": {"foo": "foo"}}');
 
       expect(fixture.components.FirstComponent
-             .fixtures['default'].nested.foo).to.equal('bar');
+             .fixtures.default.nested.foo).to.equal('bar');
     });
 
     describe('Valid editor input', function() {
@@ -93,21 +91,11 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
 
     describe('Invalid editor input', function() {
       beforeEach(function() {
-        sinon.stub(console, 'error');
-
         triggerEditorChange('lorem ipsum');
-      });
-
-      afterEach(function() {
-        console.error.restore();
       });
 
       it('should not update fixture contents', function() {
         expect(stateSet.fixtureContents).to.be.undefined;
-      });
-
-      it('should call console.error', function() {
-        expect(console.error.lastCall.args[0]).to.be.an.instanceof(Error);
       });
 
       it('should mark invalid change in state', function() {

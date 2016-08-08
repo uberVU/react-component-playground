@@ -7,14 +7,12 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   stubLoadChild();
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should load splitpane', function() {

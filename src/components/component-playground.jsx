@@ -1,3 +1,5 @@
+/* global window */
+
 var style = require('./component-playground.less');
 
 var _ = require('lodash'),
@@ -9,7 +11,6 @@ var _ = require('lodash'),
     isSerializable = require('../lib/is-serializable.js').isSerializable,
     localStorageLib = require('../lib/local-storage.js'),
     Provider = require('react-redux').Provider,
-    redux = require('redux'),
     SplitPane = require('ubervu-react-split-pane'),
     changeFixture = require('../actions/change-fixture.js').changeFixture,
     store = require('../store/create-store.js')();
@@ -22,8 +23,6 @@ module.exports = React.createClass({
    */
   displayName: 'ComponentPlayground',
 
-  mixins: [ComponentTree.Mixin],
-
   propTypes: {
     components: React.PropTypes.object.isRequired,
     component: React.PropTypes.string,
@@ -32,6 +31,8 @@ module.exports = React.createClass({
     fullScreen: React.PropTypes.bool,
     containerClassName: React.PropTypes.string
   },
+
+  mixins: [ComponentTree.Mixin],
 
   statics: {
     isFixtureSelected: function(props) {
@@ -147,7 +148,7 @@ module.exports = React.createClass({
         key: 'provider',
         store: store,
         children: this._renderPreview()
-      }
+      };
     }
   },
 
@@ -164,12 +165,12 @@ module.exports = React.createClass({
           {this._renderHomeButton()}
           {isFixtureSelected ? this._renderMenu() : null}
         </div>
-        <div className={style['fixtures']}>
+        <div className={style.fixtures}>
           {this._renderFixtures()}
         </div>
       </div>
       {isFixtureSelected ? this._renderContentFrame() : null}
-    </div>
+    </div>;
   },
 
   _renderFixtures: function() {
@@ -183,7 +184,7 @@ module.exports = React.createClass({
         </li>;
 
       }.bind(this))}
-    </ul>
+    </ul>;
   },
 
   _renderComponentFixtures: function(componentName, fixtures) {
@@ -216,20 +217,20 @@ module.exports = React.createClass({
         key="previewContainer"
         className={this._getPreviewClasses()}>
           {this.loadChild('preview')}
-      </div>
-    }.bind(this)
+      </div>;
+    }.bind(this);
   },
 
   _renderContentFrame: function() {
     return <div ref="contentFrame" className={this._getContentFrameClasses()}>
       {this.props.editor ? this.loadChild('splitPane')
                          : this.loadChild('provider')}
-    </div>
+    </div>;
   },
 
   _renderFixtureEditor: function() {
     var editorClasses = {};
-    editorClasses[style['fixture-editor']] =  true;
+    editorClasses[style['fixture-editor']] = true;
     editorClasses[style['invalid-syntax']] =
       !this.state.isFixtureUserInputValid;
     editorClasses = classNames(editorClasses);
@@ -313,7 +314,7 @@ module.exports = React.createClass({
 
     if (this.props.component) {
       this.refs['componentName-' + this.props.component]
-        .getDOMNode().scrollIntoView({behavior:'smooth'});
+        .getDOMNode().scrollIntoView({behavior: 'smooth'});
     }
   },
 
@@ -375,11 +376,11 @@ module.exports = React.createClass({
     }
   },
 
-  onEditorFocus: function(event) {
+  onEditorFocus: function() {
     this.setState({isEditorFocused: true});
   },
 
-  onEditorBlur: function(event) {
+  onEditorBlur: function() {
     this.setState({isEditorFocused: false});
   },
 
@@ -422,13 +423,12 @@ module.exports = React.createClass({
       });
     } catch (e) {
       newState.isFixtureUserInputValid = false;
-      console.error(e);
     }
 
     this.setState(newState);
   },
 
-  onWindowResize: function(e) {
+  onWindowResize: function() {
     this._updateContentFrameOrientation();
   },
 

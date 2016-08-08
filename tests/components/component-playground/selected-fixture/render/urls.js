@@ -6,12 +6,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render URLs`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should generate open full-screen url', function() {

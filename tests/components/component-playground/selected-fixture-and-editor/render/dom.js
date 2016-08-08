@@ -7,12 +7,10 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      container,
       fixture;
 
   beforeEach(function() {
-    ({container, component, $component} = render(fixture));
+    ({component} = render(fixture));
   });
 
   it('should render fixture editor', function() {
@@ -59,7 +57,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
     var splitByOrientation = {
       portrait: 'horizontal',
       landscape: 'vertical'
-    }
+    };
 
     expect(component.refs.splitPane.props.split)
       .to.equal(splitByOrientation[component.state.orientation]);
