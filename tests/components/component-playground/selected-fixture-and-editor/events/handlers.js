@@ -5,7 +5,6 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
       _ = require('lodash'),
       localStorageLib = require('src/lib/local-storage.js'),
       render = require('tests/lib/render-component.js'),
-      _ = require('lodash'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
