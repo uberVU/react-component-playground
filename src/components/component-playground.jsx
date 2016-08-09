@@ -551,34 +551,37 @@ module.exports = React.createClass({
   },
 
   _getFilteredFixtures() {
-    var components = _.cloneDeep(this.props.components);
+    var components = this.props.components;
 
-    return _.reduce(components, function(acc, componentProps, componentName) {
-      var fixtureNames = Object.keys(componentProps.fixtures);
-      var filteredFixtureNames = _.filter(fixtureNames, function(fixtureName) {
+    // Get components which match search text by one or more fixture names.
+    var matchedByFixtureName = _.pick(
+        _.mapValues(components, function(fixturesObject) {
+          return _.assign({}, fixturesObject, {
+          // Only select fixtures matching search text.
+            'fixtures': _.pick(
+                fixturesObject.fixtures,
+                function(fixtureProps, fixtureName) {
+                  return fixtureName.indexOf(this.state.searchText) !== -1;
+                }.bind(this)
+            )
+          });
+        }.bind(this)),
+        function(fixturesObject) {
+          return !_.isEmpty(fixturesObject.fixtures);
+        }
+    );
 
-        // Always show the selected fixture even if the search value doesn't
-        // match its name because we'd like to always have it visible.
-        return fixtureName.indexOf(this.state.searchText) !== -1 ||
-               this._isCurrentFixtureSelected(componentName, fixtureName);
-      }.bind(this));
+    // Get components which match search text by component name and the
+    // currently selected one.
+    var matchedByComponentName = _.pick(
+        components,
+        function(fixtureProps, componentName) {
+          return componentName.indexOf(this.state.searchText) !== -1 ||
+            componentName === this.props.component;
+        }.bind(this)
+    );
 
-      // There's no need to show components that doesn't have any results
-      if (filteredFixtureNames.length === 0) {
-        return acc;
-      }
-
-      var fixtures = _.reduce(filteredFixtureNames, function(acc, fixtureName) {
-        acc[fixtureName] = componentProps.fixtures[fixtureName];
-
-        return acc;
-      }, {});
-
-      acc[componentName] = _.extend(componentProps, {
-        fixtures: fixtures
-      });
-
-      return acc;
-    }.bind(this), {});
+    // Merge the components and return them.
+    return _.assign({}, matchedByFixtureName, matchedByComponentName);
   }
 });
