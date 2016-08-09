@@ -172,6 +172,7 @@ module.exports = React.createClass({
             <input
               ref="filterInput"
               className={style['filter-input']}
+              placeholder="Search"
               onChange={this.onSearchChange}
             />
             <i className={style['filter-input-icon']} />
