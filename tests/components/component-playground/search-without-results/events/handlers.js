@@ -10,7 +10,8 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
     ({component} = render(fixture));
   });
 
-  it('should not render any components based on search value', function() {
-    expect(component._getFilteredFixtures()).to.be.empty;
+  it('should only render selected component based on search value', function() {
+    expect(component._getFilteredFixtures())
+      .to.have.all.keys('FirstComponent');
   });
 });
