@@ -550,34 +550,35 @@ module.exports = React.createClass({
     });
   },
 
-  _getFilteredFixtures() {
-    var components = this.props.components;
+  _getFilteredComponents() {
+    return _.mapValues(this.props.components, function(fixtures) {
+      return _.assign({}, fixtures, {
+      // Only select fixtures matching search text and rebuild the object.
+        'fixtures': _.pick(fixtures.fixtures,
+            function(fixtureProps, fixtureName) {
+              return fixtureName.indexOf(this.state.searchText) !== -1;
+            }.bind(this)
+        )
+      });
+    }.bind(this));
+  },
 
+  _getFilteredFixtures() {
     // Get components which match search text by one or more fixture names.
     var matchedByFixtureName = _.pick(
-        _.mapValues(components, function(fixturesObject) {
-          return _.assign({}, fixturesObject, {
-          // Only select fixtures matching search text.
-            'fixtures': _.pick(
-                fixturesObject.fixtures,
-                function(fixtureProps, fixtureName) {
-                  return fixtureName.indexOf(this.state.searchText) !== -1;
-                }.bind(this)
-            )
-          });
-        }.bind(this)),
-        function(fixturesObject) {
-          return !_.isEmpty(fixturesObject.fixtures);
+        this._getFilteredComponents(),
+        // Ignore the component if no fixture matched.
+        function(fixtures) {
+          return !_.isEmpty(fixtures.fixtures);
         }
     );
 
     // Get components which match search text by component name and the
     // currently selected one.
-    var matchedByComponentName = _.pick(
-        components,
+    var matchedByComponentName = _.pick(this.props.components,
         function(fixtureProps, componentName) {
           return componentName.indexOf(this.state.searchText) !== -1 ||
-            componentName === this.props.component;
+                 componentName === this.props.component;
         }.bind(this)
     );
 
