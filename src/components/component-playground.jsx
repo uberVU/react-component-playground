@@ -554,7 +554,7 @@ module.exports = React.createClass({
     return _.mapValues(this.props.components, function(fixtures) {
       return _.assign({}, fixtures, {
       // Only select fixtures matching search text and rebuild the object.
-        'fixtures': _.pick(fixtures.fixtures,
+        fixtures: _.pick(fixtures.fixtures,
             function(fixtureProps, fixtureName) {
               return fixtureName.indexOf(this.state.searchText) !== -1;
             }.bind(this)
@@ -565,8 +565,7 @@ module.exports = React.createClass({
 
   _getFilteredFixtures() {
     // Get components which match search text by one or more fixture names.
-    var matchedByFixtureName = _.pick(
-        this._getFilteredComponents(),
+    var matchedByFixtureName = _.pick(this._getFilteredComponents(),
         // Ignore the component if no fixture matched.
         function(fixtures) {
           return !_.isEmpty(fixtures.fixtures);
