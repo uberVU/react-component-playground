@@ -185,8 +185,11 @@ module.exports = React.createClass({
   },
 
   _renderFixtures: function() {
+    var components = this._getFilteredComponents();
+
     return <ul className={style.components}>
-      {_.map(this._getFilteredFixtures(), function(component, componentName) {
+      {_.map(_.sortBy(_.keys(components)), function(componentName) {
+        var component = components[componentName];
         return <li className={style.component} key={componentName}>
           <p ref={'componentName-' + componentName}
              className={style['component-name']}>{componentName}</p>
@@ -550,38 +553,46 @@ module.exports = React.createClass({
     });
   },
 
-  _getFilteredComponents() {
-    return _.mapValues(this.props.components, function(fixtures) {
-      return _.assign({}, fixtures, {
+  _getComponentsWithMatchingFixtures() {
+    return _.pick(_.mapValues(this.props.components, function(details) {
+      return _.assign({}, details, {
       // Only select fixtures matching search text and rebuild the object.
-        fixtures: _.pick(fixtures.fixtures,
+        fixtures: _.pick(details.fixtures,
             function(fixtureProps, fixtureName) {
               return fixtureName.indexOf(this.state.searchText) !== -1;
             }.bind(this)
         )
       });
-    }.bind(this));
-  },
-
-  _getFilteredFixtures() {
-    // Get components which match search text by one or more fixture names.
-    var matchedByFixtureName = _.pick(this._getFilteredComponents(),
+    }.bind(this)),
         // Ignore the component if no fixture matched.
-        function(fixtures) {
-          return !_.isEmpty(fixtures.fixtures);
+        function(details) {
+          return !_.isEmpty(details.fixtures);
         }
     );
+  },
 
-    // Get components which match search text by component name and the
-    // currently selected one.
-    var matchedByComponentName = _.pick(this.props.components,
+  _getComponentsWithMatchingName() {
+    return _.pick(this.props.components,
         function(fixtureProps, componentName) {
-          return componentName.indexOf(this.state.searchText) !== -1 ||
-                 componentName === this.props.component;
+          return componentName.indexOf(this.state.searchText) !== -1;
         }.bind(this)
     );
+  },
 
-    // Merge the components and return them.
-    return _.assign({}, matchedByFixtureName, matchedByComponentName);
+  _getFilteredComponents() {
+    // Get components which match search text by one or more fixture names, only
+    // keeping those fixtures.
+    // Then, get components which match search text by component name.
+    // Finally, merge them with the currently selected component.
+
+    var componentName = this.props.component;
+    var selectedComponent = componentName
+          ? {[componentName]: _.cloneDeep(this.props.components[componentName])}
+          : {};
+
+    return _.assign(selectedComponent,
+        this._getComponentsWithMatchingFixtures(),
+        this._getComponentsWithMatchingName()
+    );
   }
 });
