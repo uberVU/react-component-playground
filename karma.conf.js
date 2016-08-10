@@ -9,6 +9,7 @@ module.exports = function(config) {
       dir: 'coverage/'
     },
     files: [
+      'local-storage.js',
       'bind-polyfill.js',
       'components/**/*.js',
       'actions/*.js',
