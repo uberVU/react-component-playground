@@ -11,7 +11,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
   });
 
   it('should only render selected component based on search value', function() {
-    expect(component._getFilteredFixtures())
-      .to.have.all.keys('FirstComponent');
+    expect(component.refs['componentName-FirstComponent']).to.exist;
+    expect(component.refs['componentName-SecondComponent']).to.not.exist;
   });
 });
