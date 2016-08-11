@@ -7,7 +7,6 @@ describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      fixture,
       childParams;
 
   stubLoadChild();

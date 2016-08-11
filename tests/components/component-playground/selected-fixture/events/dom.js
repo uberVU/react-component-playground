@@ -7,8 +7,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
       render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
-  var component,
-      fixture;
+  var component;
 
   var stubbedFixture = _.assign({}, fixture, {
     router: {

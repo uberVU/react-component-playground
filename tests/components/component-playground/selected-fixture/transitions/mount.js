@@ -4,6 +4,7 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
   var ComponentTree = require('react-component-tree'),
       _ = require('lodash'),
       render = require('tests/lib/render-component.js'),
+      _ = require('lodash'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,

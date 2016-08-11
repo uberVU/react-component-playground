@@ -5,8 +5,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
   var render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
-  var $component,
-      fixture;
+  var $component;
 
   beforeEach(function() {
     ({$component} = render(fixture));

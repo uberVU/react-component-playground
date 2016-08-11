@@ -6,8 +6,7 @@ describe(`ComponentPlayground (${FIXTURE}) Transitions Mount`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      container,
-      fixture;
+      container;
 
   var timeoutId = 555;
 

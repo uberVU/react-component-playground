@@ -1,4 +1,4 @@
-var FIXTURE = 'default';
+var FIXTURE = 'search-without-results';
 
 describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
   var render = require('tests/lib/render-component.js'),
@@ -8,17 +8,10 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
 
   beforeEach(function() {
     ({component} = render(fixture));
-
-    sinon.spy(component, 'setState');
   });
 
-  afterEach(function() {
-    component.setState.restore();
-  });
-
-  it('should ignore fixture update', function() {
-    component.onFixtureUpdate();
-
-    expect(component.setState).to.not.have.been.called;
+  it('should only render selected component based on search value', function() {
+    expect(component.refs['componentName-FirstComponent']).to.exist;
+    expect(component.refs['componentName-SecondComponent']).to.not.exist;
   });
 });

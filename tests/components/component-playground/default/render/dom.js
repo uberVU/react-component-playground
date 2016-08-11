@@ -7,8 +7,7 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
-      $component,
-      fixture;
+      $component;
 
   beforeEach(function() {
     ({component, $component} = render(fixture));
@@ -69,5 +68,19 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
 
   it('should not render a splitpane', function() {
     expect(component.refs.splitPane).to.not.exist;
+  });
+
+  it('should render the search input', function() {
+    expect(component.refs.filterInput).to.exist;
+  });
+
+  it('should set the correct class name to search input', function() {
+    expect($(component.refs.filterInput.getDOMNode())
+           .hasClass(style['filter-input'])).to.be.true;
+  });
+
+  it('should set onSearchChange event to search input', function() {
+    expect(component.refs.filterInput.props.onChange).to.equal(
+        component.onSearchChange);
   });
 });

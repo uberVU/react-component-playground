@@ -16,10 +16,10 @@
       function bound() {
         var invokedAsConstructor = func.prototype && this instanceof func;
         return func.apply(
-            // Ignore the context parameter when invoking the bound function
-            // as a constructor. Note that this includes not only constructor
-            // invocations using the new keyword but also calls to base class
-            // constructors such as BaseClass.call(this, ...) or super(...).
+          // Ignore the context parameter when invoking the bound function
+          // as a constructor. Note that this includes not only constructor
+          // invocations using the new keyword but also calls to base class
+          // constructors such as BaseClass.call(this, ...) or super(...).
             !invokedAsConstructor && context || this,
             args.concat(slice.call(arguments))
         );

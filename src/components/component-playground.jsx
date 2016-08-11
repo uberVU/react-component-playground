@@ -36,7 +36,7 @@ module.exports = React.createClass({
 
   statics: {
     isFixtureSelected: function(props) {
-      return props.component && props.fixture;
+      return !!(props.component && props.fixture);
     },
 
     didFixtureChange: function(prevProps, nextProps) {
@@ -104,7 +104,8 @@ module.exports = React.createClass({
     var defaultState = {
       fixtureChange: 0,
       isEditorFocused: false,
-      orientation: 'landscape'
+      orientation: 'landscape',
+      searchText: ''
     };
 
     return _.assign(defaultState, this.constructor.getFixtureState(this.props));
@@ -153,7 +154,8 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    var isFixtureSelected = this.constructor.isFixtureSelected(this.props);
+    var isFixtureSelected = this._isFixtureSelected();
+
     var classes = {};
     classes[style['component-playground']] = true;
     classes[style['full-screen']] = this.props.fullScreen;
@@ -166,6 +168,15 @@ module.exports = React.createClass({
           {isFixtureSelected ? this._renderMenu() : null}
         </div>
         <div className={style.fixtures}>
+          <div className={style['filter-input-container']}>
+            <input
+              ref="filterInput"
+              className={style['filter-input']}
+              placeholder="Search"
+              onChange={this.onSearchChange}
+            />
+            <i className={style['filter-input-icon']} />
+          </div>
           {this._renderFixtures()}
         </div>
       </div>
@@ -174,9 +185,11 @@ module.exports = React.createClass({
   },
 
   _renderFixtures: function() {
-    return <ul className={style.components}>
-      {_.map(this.props.components, function(component, componentName) {
+    var components = this._getFilteredComponents();
 
+    return <ul className={style.components}>
+      {_.map(_.sortBy(_.keys(components)), function(componentName) {
+        var component = components[componentName];
         return <li className={style.component} key={componentName}>
           <p ref={'componentName-' + componentName}
              className={style['component-name']}>{componentName}</p>
@@ -190,7 +203,6 @@ module.exports = React.createClass({
   _renderComponentFixtures: function(componentName, fixtures) {
     return <ul className={style['component-fixtures']}>
       {_.map(fixtures, function(props, fixtureName) {
-
         var fixtureProps = this._extendFixtureRoute({
           component: componentName,
           fixture: fixtureName
@@ -251,8 +263,7 @@ module.exports = React.createClass({
     var classes = {};
     classes[style.button] = true;
     classes[style['play-button']] = true;
-    classes[style['selected-button']] =
-      !this.constructor.isFixtureSelected(this.props);
+    classes[style['selected-button']] = !this._isFixtureSelected();
 
     classes = classNames(classes);
 
@@ -436,6 +447,16 @@ module.exports = React.createClass({
     localStorageLib.set('splitPos', size);
   },
 
+  onSearchChange: function(e) {
+    this.setState({
+      searchText: e.target.value
+    });
+  },
+
+  _isFixtureSelected: function() {
+    return this.constructor.isFixtureSelected(this.props);
+  },
+
   _saveRef: function(name) {
     // In a Provider context, we can only use callbacks to save component refs.
     return function(ref) {
@@ -479,10 +500,15 @@ module.exports = React.createClass({
   _getFixtureClasses: function(componentName, fixtureName) {
     var classes = {};
     classes[style['component-fixture']] = true;
-    classes[style.selected] = componentName === this.props.component &&
-                              fixtureName === this.props.fixture;
+    classes[style.selected] = this._isCurrentFixtureSelected(componentName,
+                                                             fixtureName);
 
     return classNames(classes);
+  },
+
+  _isCurrentFixtureSelected(componentName, fixtureName) {
+    return componentName === this.props.component &&
+           fixtureName === this.props.fixture;
   },
 
   _extendFixtureRoute: function(newProps) {
@@ -515,7 +541,7 @@ module.exports = React.createClass({
   },
 
   _updateContentFrameOrientation: function() {
-    if (!this.constructor.isFixtureSelected(this.props)) {
+    if (!this._isFixtureSelected()) {
       return;
     }
 
@@ -525,5 +551,50 @@ module.exports = React.createClass({
       orientation: contentNode.offsetHeight > contentNode.offsetWidth ?
                    'portrait' : 'landscape'
     });
+  },
+
+  _getComponentsWithMatchingFixtures() {
+    return _.pick(_.mapValues(this.props.components, function(details) {
+      return _.assign({}, details, {
+      // Only select fixtures matching search text and rebuild the object.
+        fixtures: _.pick(details.fixtures,
+            function(fixtureProps, fixtureName) {
+              return fixtureName.indexOf(this.state.searchText) !== -1;
+            }.bind(this)
+        )
+      });
+    }.bind(this)),
+        // Ignore the component if no fixture matched.
+        function(details) {
+          return !_.isEmpty(details.fixtures);
+        }
+    );
+  },
+
+  _getComponentsWithMatchingName() {
+    return _.pick(this.props.components,
+        function(fixtureProps, componentName) {
+          return componentName.indexOf(this.state.searchText) !== -1;
+        }.bind(this)
+    );
+  },
+
+  _getFilteredComponents() {
+    // Get components which match search text by one or more fixture names, only
+    // keeping those fixtures.
+    // Then, get components which match search text by component name.
+    // Finally, merge them with the currently selected component.
+    var matchingComponents = _.assign({},
+        this._getComponentsWithMatchingFixtures(),
+        this._getComponentsWithMatchingName()
+    );
+
+    if (this.props.component) {
+      matchingComponents[this.props.component] = _.cloneDeep(
+          this.props.components[this.props.component]
+      );
+    }
+
+    return matchingComponents;
   }
 });

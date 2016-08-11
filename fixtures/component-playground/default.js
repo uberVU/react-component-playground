@@ -44,7 +44,8 @@ module.exports = {
           state: {
             somethingHappened: true
           }
-        }
+        },
+        'no-data': {}
       }
     }
   },
