@@ -50,7 +50,6 @@ module.exports = {
     }
   },
   router: {
-    routeLink: function() {},
     goTo: function() {}
   }
 };
