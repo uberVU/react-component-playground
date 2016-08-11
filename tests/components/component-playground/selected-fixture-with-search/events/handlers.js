@@ -18,7 +18,7 @@ describe(`ComponentPlayground (${FIXTURE}) Events Handlers`, function() {
   });
 
   it('should filter the components', function() {
-    expect(component.getFilteredComponents()).to.have.all.keys(
-        'FirstComponent', 'SecondComponent');
+    expect(component.refs['componentName-FirstComponent']).to.exist;
+    expect(component.refs['componentName-SecondComponent']).to.exist;
   });
 });

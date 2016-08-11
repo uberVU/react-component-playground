@@ -185,7 +185,7 @@ module.exports = React.createClass({
   },
 
   _renderFixtures: function() {
-    var components = this.getFilteredComponents();
+    var components = this._getFilteredComponents();
 
     return <ul className={style.components}>
       {_.map(_.sortBy(_.keys(components)), function(componentName) {
@@ -453,26 +453,6 @@ module.exports = React.createClass({
     });
   },
 
-  getFilteredComponents() {
-    // Get components which match search text by one or more fixture names, only
-    // keeping those fixtures.
-    // Then, get components which match search text by component name.
-    // Finally, merge them with the currently selected component.
-
-    var matchingComponents = _.assign({},
-        this._getComponentsWithMatchingFixtures(),
-        this._getComponentsWithMatchingName()
-    );
-
-    if (this.props.component) {
-      matchingComponents[this.props.component] = _.cloneDeep(
-          this.props.components[this.props.component]
-      );
-    }
-
-    return matchingComponents;
-  },
-
   _isFixtureSelected: function() {
     return this.constructor.isFixtureSelected(this.props);
   },
@@ -597,5 +577,24 @@ module.exports = React.createClass({
           return componentName.indexOf(this.state.searchText) !== -1;
         }.bind(this)
     );
+  },
+
+  _getFilteredComponents() {
+    // Get components which match search text by one or more fixture names, only
+    // keeping those fixtures.
+    // Then, get components which match search text by component name.
+    // Finally, merge them with the currently selected component.
+    var matchingComponents = _.assign({},
+        this._getComponentsWithMatchingFixtures(),
+        this._getComponentsWithMatchingName()
+    );
+
+    if (this.props.component) {
+      matchingComponents[this.props.component] = _.cloneDeep(
+          this.props.components[this.props.component]
+      );
+    }
+
+    return matchingComponents;
   }
 });
