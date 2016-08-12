@@ -1,4 +1,3 @@
-var entireStore = require('./entire-store.js'),
-    redux = require('redux');
+var entireStore = require('./entire-store.js');
 
-module.exports = redux.combineReducers({entireStore: entireStore});
+module.exports = entireStore;
