@@ -123,8 +123,8 @@ module.exports = React.createClass({
       // Shallow apply unserializable props
       _.assign(params, this.state.fixtureUnserializableProps);
 
-      return _.merge(params, _.omit(this.state.fixtureContents, ['reduxStore',
-        'state']));
+      return _.merge(params, _.omit(this.state.fixtureContents,
+                                    ['reduxStore', 'state']));
     },
 
     splitPane: function() {
