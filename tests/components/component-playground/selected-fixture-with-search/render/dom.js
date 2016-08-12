@@ -24,9 +24,14 @@ describe(`ComponentPlayground (${FIXTURE}) Render DOM`, function() {
       .to.not.exist;
   });
 
-  it('should render the selected component regardless of search value',
+  it('should not render error fixture based on search value', function() {
+    expect(component.refs['fixtureButton-FirstComponent-error'])
+      .to.not.exist;
+  });
+
+  it('should render the selected fixture regardless of search value',
       function() {
-        expect(component.refs['componentName-FirstComponent']).to.exist;
+        expect(component.refs['fixtureButton-FirstComponent-default']).to.exist;
       }
   );
 });
