@@ -189,7 +189,7 @@ module.exports = React.createClass({
   _renderFixtures: function() {
     var components = this._getFilteredComponents();
     var sortedComponentNames = (_.keys(components)).sort(function(a, b) {
-      return components[b].maxScore - components[a].maxScore;
+      return components[b].matchScore - components[a].matchScore;
     });
 
     return <ul className={style.components}>
@@ -558,6 +558,30 @@ module.exports = React.createClass({
     });
   },
 
+  _getMatchingFixtures(fixtures, componentName) {
+    // Only select fixtures matching search text and rebuild the object.
+    var matchScore = 0;
+
+    return {
+      fixtures: _.pick(fixtures, function(fixtureProps, fixtureName) {
+        var componentAndFixture = componentName + fixtureName;
+        var fixtureAndComponent = fixtureName + componentName;
+        var query = this.state.searchText;
+
+        // Update maximum score if needed.
+        matchScore = _.max([matchScore,
+          fuzzaldrinPlus.score(componentAndFixture, query),
+          fuzzaldrinPlus.score(fixtureAndComponent, query)]);
+
+        // Add this fixture if it matches or if it is selected.
+        return !_.isEmpty(fuzzaldrinPlus.match(componentAndFixture, query)) ||
+               !_.isEmpty(fuzzaldrinPlus.match(fixtureAndComponent, query)) ||
+               this._isCurrentFixtureSelected(componentName, fixtureName);
+      }),
+      matchScore: matchScore
+    };
+  },
+
   _getFilteredComponents() {
     if (this.state.searchText.length < 2) {
       return this.props.components;
@@ -567,30 +591,8 @@ module.exports = React.createClass({
     // keeping those fixtures. Also keep the selected fixture.
     return _.pick(_.mapValues(this.props.components,
         function(details, componentName) {
-          var maxScore = 0;
-          return _.assign({}, details, {
-          // Only select fixtures matching search text and rebuild the object.
-            fixtures: _.pick(details.fixtures,
-                function(fixtureProps, fixtureName) {
-                  var componentAndFixture = componentName + fixtureName;
-                  var fixtureAndComponent = fixtureName + componentName;
-                  var query = this.state.searchText;
-
-                  // Update maximum score if needed.
-                  maxScore = _.max([maxScore,
-                    fuzzaldrinPlus.score(componentAndFixture, query),
-                    fuzzaldrinPlus.score(fixtureAndComponent, query)]);
-
-                  // Add this fixture if it matches or if it is selected.
-                  return !_.isEmpty(fuzzaldrinPlus.match(
-                      componentAndFixture, query)) ||
-                      !_.isEmpty(fuzzaldrinPlus.match(
-                          fixtureAndComponent, query)) ||
-                    this._isCurrentFixtureSelected(componentName, fixtureName);
-                }.bind(this)
-            ),
-            maxScore: maxScore
-          });
+          return _.assign({}, details,
+              this._getMatchingFixtures(details.fixtures, componentName));
         }.bind(this)),
         // Ignore the component if no fixture matched.
         function(details) {
