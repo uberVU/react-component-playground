@@ -577,7 +577,7 @@ module.exports = React.createClass({
         return !_.isEmpty(fuzzaldrinPlus.match(componentAndFixture, query)) ||
                !_.isEmpty(fuzzaldrinPlus.match(fixtureAndComponent, query)) ||
                this._isCurrentFixtureSelected(componentName, fixtureName);
-      }),
+      }.bind(this)),
       matchScore: matchScore
     };
   },
