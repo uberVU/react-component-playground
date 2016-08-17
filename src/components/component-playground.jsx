@@ -13,7 +13,8 @@ var _ = require('lodash'),
     Provider = require('react-redux').Provider,
     SplitPane = require('ubervu-react-split-pane'),
     changeFixture = require('../actions/change-fixture.js').changeFixture,
-    store = require('../store/create-store.js')();
+    store = require('../store/create-store.js')(),
+    fuzzaldrinPlus = require('fuzzaldrin-plus');
 
 module.exports = React.createClass({
   /**
@@ -187,9 +188,12 @@ module.exports = React.createClass({
 
   _renderFixtures: function() {
     var components = this._getFilteredComponents();
+    var sortedComponentNames = (_.keys(components)).sort(function(a, b) {
+      return components[b].matchScore - components[a].matchScore;
+    });
 
     return <ul className={style.components}>
-      {_.map(_.sortBy(_.keys(components)), function(componentName) {
+      {_.map(sortedComponentNames, function(componentName) {
         var component = components[componentName];
         return <li className={style.component} key={componentName}>
           <p ref={'componentName-' + componentName}
@@ -554,48 +558,46 @@ module.exports = React.createClass({
     });
   },
 
-  _getComponentsWithMatchingFixtures() {
-    return _.pick(_.mapValues(this.props.components, function(details) {
-      return _.assign({}, details, {
-      // Only select fixtures matching search text and rebuild the object.
-        fixtures: _.pick(details.fixtures,
-            function(fixtureProps, fixtureName) {
-              return fixtureName.indexOf(this.state.searchText) !== -1;
-            }.bind(this)
-        )
-      });
-    }.bind(this)),
+  _getMatchingFixtures(fixtures, componentName) {
+    // Only select fixtures matching search text and rebuild the object.
+    var matchScore = 0;
+
+    return {
+      fixtures: _.pick(fixtures, function(fixtureProps, fixtureName) {
+        var componentAndFixture = componentName + fixtureName;
+        var fixtureAndComponent = fixtureName + componentName;
+        var query = this.state.searchText;
+
+        // Update maximum score if needed.
+        matchScore = _.max([matchScore,
+          fuzzaldrinPlus.score(componentAndFixture, query),
+          fuzzaldrinPlus.score(fixtureAndComponent, query)]);
+
+        // Add this fixture if it matches or if it is selected.
+        return !_.isEmpty(fuzzaldrinPlus.match(componentAndFixture, query)) ||
+               !_.isEmpty(fuzzaldrinPlus.match(fixtureAndComponent, query)) ||
+               this._isCurrentFixtureSelected(componentName, fixtureName);
+      }.bind(this)),
+      matchScore: matchScore
+    };
+  },
+
+  _getFilteredComponents() {
+    if (this.state.searchText.length < 2) {
+      return this.props.components;
+    }
+
+    // Get components which match search text by one or more fixture names, only
+    // keeping those fixtures. Also keep the selected fixture.
+    return _.pick(_.mapValues(this.props.components,
+        function(details, componentName) {
+          return _.assign({}, details,
+              this._getMatchingFixtures(details.fixtures, componentName));
+        }.bind(this)),
         // Ignore the component if no fixture matched.
         function(details) {
           return !_.isEmpty(details.fixtures);
         }
     );
-  },
-
-  _getComponentsWithMatchingName() {
-    return _.pick(this.props.components,
-        function(fixtureProps, componentName) {
-          return componentName.indexOf(this.state.searchText) !== -1;
-        }.bind(this)
-    );
-  },
-
-  _getFilteredComponents() {
-    // Get components which match search text by one or more fixture names, only
-    // keeping those fixtures.
-    // Then, get components which match search text by component name.
-    // Finally, merge them with the currently selected component.
-    var matchingComponents = _.assign({},
-        this._getComponentsWithMatchingFixtures(),
-        this._getComponentsWithMatchingName()
-    );
-
-    if (this.props.component) {
-      matchingComponents[this.props.component] = _.cloneDeep(
-          this.props.components[this.props.component]
-      );
-    }
-
-    return matchingComponents;
   }
 });

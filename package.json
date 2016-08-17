@@ -25,6 +25,7 @@
     "eslint-plugin-ubervu": "^0.1.0",
     "espree": "^3.1.7",
     "esprima-fb": "^14001.1.0-dev-harmony-fb",
+    "fuzzaldrin-plus": "^0.3.1",
     "istanbul": "^0.3.13",
     "istanbul-instrumenter-loader": "^0.1.2",
     "jquery": "^2.1.3",
