@@ -3,13 +3,13 @@ var FIXTURE = 'selected-fixture';
 describe(`ComponentPlayground (${FIXTURE}) Render Children`, function() {
   var loadChild = require('react-component-tree').loadChild,
       render = require('tests/lib/render-component.js'),
-      stubLoadChild = require('tests/setup/stub-load-child.js'),
+      spyLoadChild = require('tests/setup/spy-load-child.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
 
   var component,
       childParams;
 
-  stubLoadChild();
+  spyLoadChild();
 
   beforeEach(function() {
     ({component} = render(fixture));
