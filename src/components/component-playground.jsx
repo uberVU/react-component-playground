@@ -14,7 +14,17 @@ var _ = require('lodash'),
     SplitPane = require('ubervu-react-split-pane'),
     changeFixture = require('../actions/change-fixture.js').changeFixture,
     store = require('../store/create-store.js')(),
+    CodeMirror = require('react-codemirror'),
     fuzzaldrinPlus = require('fuzzaldrin-plus');
+
+require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/fold/foldcode.js');
+require('codemirror/addon/fold/foldgutter.js');
+require('codemirror/addon/fold/foldgutter.css');
+require('codemirror/addon/fold/brace-fold.js');
+require('codemirror/lib/codemirror.css');
+require('codemirror/theme/solarized.css');
+require('./codemirror.less');
 
 module.exports = React.createClass({
   /**
@@ -152,6 +162,35 @@ module.exports = React.createClass({
         store: store,
         children: this._renderPreview()
       };
+    },
+
+    editor: function() {
+      return {
+        component: CodeMirror,
+        key: 'editor',
+        value: this.state.fixtureUserInput,
+        onChange: this.onFixtureChange,
+        onFocusChange: this.onEditorFocusChange,
+        options: {
+          mode: {name: 'javascript', json: true},
+          foldGutter: true,
+          lineNumbers: true,
+          theme: 'solarized light',
+          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+          // This is added for 2-way Tab functionality:
+          // If some text is selected, indents all selected lines by 1 unit;
+          // If not, just insert 2 spaces at the cursor position.
+          extraKeys: {
+            Tab: function(cm) {
+              if (cm.somethingSelected()) {
+                cm.indentSelection('add');
+              } else {
+                cm.replaceSelection('  ', 'end', '+input');
+              }
+            }
+          }
+        }
+      };
     }
   },
 
@@ -254,13 +293,7 @@ module.exports = React.createClass({
 
     return <div key="fixture-editor-outer"
                 className={style['fixture-editor-outer']}>
-      <textarea ref="editor"
-                className={editorClasses}
-                value={this.state.fixtureUserInput}
-                onFocus={this.onEditorFocus}
-                onBlur={this.onEditorBlur}
-                onChange={this.onFixtureChange}>
-      </textarea>
+      {this.loadChild('editor')}
     </div>;
   },
 
@@ -392,12 +425,8 @@ module.exports = React.createClass({
     }
   },
 
-  onEditorFocus: function() {
-    this.setState({isEditorFocused: true});
-  },
-
-  onEditorBlur: function() {
-    this.setState({isEditorFocused: false});
+  onEditorFocusChange: function(focused) {
+    this.setState({isEditorFocused: focused});
   },
 
   onFixtureUpdate: function() {
@@ -422,7 +451,7 @@ module.exports = React.createClass({
   },
 
   onFixtureChange: function(event) {
-    var userInput = event.target.value,
+    var userInput = event,
         newState = {fixtureUserInput: userInput};
 
     try {
@@ -534,7 +563,7 @@ module.exports = React.createClass({
   },
 
   _focusOnEditor: function() {
-    this.refs.editor.getDOMNode().focus();
+    this.refs.editor.getCodeMirror().focus();
   },
 
   _injectPreviewChildState: function() {
