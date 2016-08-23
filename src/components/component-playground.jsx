@@ -176,19 +176,7 @@ module.exports = React.createClass({
           foldGutter: true,
           lineNumbers: true,
           theme: 'solarized light',
-          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-          // This is added for 2-way Tab functionality:
-          // If some text is selected, indents all selected lines by 1 unit;
-          // If not, just insert 2 spaces at the cursor position.
-          extraKeys: {
-            Tab: function(cm) {
-              if (cm.somethingSelected()) {
-                cm.indentSelection('add');
-              } else {
-                cm.replaceSelection('  ', 'end', '+input');
-              }
-            }
-          }
+          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
         }
       };
     }
@@ -285,12 +273,6 @@ module.exports = React.createClass({
   },
 
   _renderFixtureEditor: function() {
-    var editorClasses = {};
-    editorClasses[style['fixture-editor']] = true;
-    editorClasses[style['invalid-syntax']] =
-      !this.state.isFixtureUserInputValid;
-    editorClasses = classNames(editorClasses);
-
     return <div key="fixture-editor-outer"
                 className={style['fixture-editor-outer']}>
       {this.loadChild('editor')}
