@@ -2,6 +2,7 @@ var FIXTURE = 'selected-fixture-and-editor';
 
 describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
   var React = require('react/addons'),
+      CodeMirror = require('codemirror'),
       utils = React.addons.TestUtils,
       render = require('tests/lib/render-component.js'),
       fixture = require(`fixtures/component-playground/${FIXTURE}.js`);
@@ -14,29 +15,35 @@ describe(`ComponentPlayground (${FIXTURE}) Events DOM`, function() {
   });
 
   it('should focus on editor on fixture click', function() {
-    var editorNode = component.refs.editor.getDOMNode();
-    sinon.spy(editorNode, 'focus');
+    var editor = component.refs.editor.getCodeMirror();
+    sinon.spy(editor, 'focus');
 
     utils.Simulate.click(
         component.refs['fixtureButton-SecondComponent-index'].getDOMNode());
 
-    expect(editorNode.focus).to.have.been.called;
+    expect(editor.focus).to.have.been.called;
   });
 
   describe('Editor events', function() {
     var stateSet;
 
     function triggerEditorEvent(event, eventData) {
+      var editor = component.refs.editor.getCodeMirror();
       sinon.spy(component, 'setState');
 
-      utils.Simulate[event](component.refs.editor.getDOMNode(), eventData);
+      if (event === 'change') {
+        editor.setValue(eventData);
+      } else {
+        CodeMirror.signal(editor, event, eventData);
+      }
+
       stateSet = component.setState.lastCall.args[0];
 
       component.setState.restore();
     }
 
     function triggerEditorChange(value) {
-      triggerEditorEvent('change', {target: {value: value}});
+      triggerEditorEvent('change', value);
     }
 
     it('should set state flag on editor focus', function() {
