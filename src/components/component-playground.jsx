@@ -359,6 +359,7 @@ module.exports = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     if (this.constructor.didFixtureChange(this.props, nextProps)) {
       var nextState = this.constructor.getFixtureState(nextProps);
+
       this.setState(nextState);
       store.dispatch(resetStore(this.props.reduxStore));
       store.dispatch(changeFixture(nextState.fixtureContents));
