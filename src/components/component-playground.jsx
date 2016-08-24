@@ -13,6 +13,7 @@ var _ = require('lodash'),
     Provider = require('react-redux').Provider,
     SplitPane = require('ubervu-react-split-pane'),
     changeFixture = require('../actions/change-fixture.js').changeFixture,
+    resetStore = require('../actions/reset-store.js').resetStore,
     store = require('../store/create-store.js')(),
     CodeMirror = require('react-codemirror'),
     fuzzaldrinPlus = require('fuzzaldrin-plus');
@@ -40,6 +41,7 @@ module.exports = React.createClass({
     fixture: React.PropTypes.string,
     editor: React.PropTypes.bool,
     fullScreen: React.PropTypes.bool,
+    reduxStore: React.PropTypes.object,
     containerClassName: React.PropTypes.string
   },
 
@@ -107,7 +109,8 @@ module.exports = React.createClass({
   getDefaultProps: function() {
     return {
       editor: false,
-      fullScreen: false
+      fullScreen: false,
+      reduxStore: {}
     };
   },
 
@@ -331,11 +334,15 @@ module.exports = React.createClass({
               onClick={this.props.router.routeLink}></a>;
   },
 
+  componentWillMount: function() {
+    store.dispatch(resetStore(this.props.reduxStore));
+    store.dispatch(changeFixture(this.state.fixtureContents));
+  },
+
   componentDidMount: function() {
     this._fixtureUpdateInterval = setInterval(this.onFixtureUpdate, 100);
 
     if (this.refs.preview) {
-      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
 
@@ -351,7 +358,10 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     if (this.constructor.didFixtureChange(this.props, nextProps)) {
-      this.setState(this.constructor.getFixtureState(nextProps));
+      var nextState = this.constructor.getFixtureState(nextProps);
+      this.setState(nextState);
+      store.dispatch(resetStore(this.props.reduxStore));
+      store.dispatch(changeFixture(nextState.fixtureContents));
     }
   },
 
@@ -368,7 +378,6 @@ module.exports = React.createClass({
     if (this.refs.preview && (
         this.constructor.didFixtureChange(prevProps, this.props) ||
         prevState.fixtureChange !== this.state.fixtureChange)) {
-      store.dispatch(changeFixture(this.state.fixtureContents));
       this._injectPreviewChildState();
     }
   },
