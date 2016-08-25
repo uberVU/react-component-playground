@@ -1,5 +1,6 @@
-var reducer = require('src/reducers/entire-store.js');
-var CHANGE_FIXTURE = require('src/actions/change-fixture.js').type;
+var reducer = require('src/reducers/entire-store.js'),
+    CHANGE_FIXTURE = require('src/actions/change-fixture.js').type,
+    RESET_STORE = require('src/actions/reset-store.js').type;
 
 describe('Change fixture reducer', function() {
   it('should return the initial state', function() {
@@ -13,19 +14,17 @@ describe('Change fixture reducer', function() {
     };
 
     var action = {
-      type: CHANGE_FIXTURE,
-      fixture: {
-        reduxStore: {
-          id: 1,
-          name: 'John'
-        }
+      type: RESET_STORE,
+      reduxStore: {
+        id: 1,
+        name: 'John'
       }
     };
 
     expect(reducer({}, action)).to.deep.equal(expectedState);
   });
 
-  it('should return empty state on undefined fixture', function() {
+  it('should return initial state on undefined fixture', function() {
     var initialState = {
       reduxStore: {
         id: 1,
@@ -37,7 +36,23 @@ describe('Change fixture reducer', function() {
       type: CHANGE_FIXTURE
     };
 
-    expect(reducer(initialState, action)).to.be.empty;
+    expect(reducer(initialState, action)).to.deep.equal(initialState);
+  });
+
+  it('should merge in new values correctly', function() {
+    var initialState = {id: 1, name: 'John'},
+        expectedState = {id: 2, name: 'John'};
+
+    var action = {
+      type: CHANGE_FIXTURE,
+      fixture: {
+        reduxStore: {
+          id: 2
+        }
+      }
+    };
+
+    expect(reducer(initialState, action)).to.deep.equal(expectedState);
   });
 
   it('should maintain state when receiving an unknown action', function() {
