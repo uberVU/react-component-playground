@@ -1,6 +1,6 @@
 {
   "name": "ubervu-react-component-playground",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "Isolated loader for React components",
   "main": "build/bundle.js",
   "repository": {
